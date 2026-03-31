@@ -810,6 +810,50 @@ footer {
 }
 .video-btn svg { flex-shrink: 0; }
 
+/* AUDIO PLAYER */
+.audio-player {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(13,10,5,0.92);
+  border: 1px solid rgba(200,146,42,0.25);
+  padding: 10px 16px;
+  backdrop-filter: blur(12px);
+  transition: border-color 0.3s;
+}
+.audio-player:hover { border-color: rgba(200,146,42,0.5); }
+.audio-play-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--gold); display: flex; align-items: center;
+  justify-content: center; width: 28px; height: 28px;
+  flex-shrink: 0; transition: color 0.2s; padding: 0;
+}
+.audio-play-btn:hover { color: var(--gold-light); }
+.audio-play-btn svg { width: 16px; height: 16px; }
+.audio-label {
+  font-family: var(--font-mono); font-size: 8px;
+  letter-spacing: 0.2em; color: var(--gray-warm);
+  text-transform: uppercase; white-space: nowrap;
+}
+.audio-volume {
+  -webkit-appearance: none; appearance: none;
+  width: 64px; height: 2px;
+  background: rgba(200,146,42,0.2);
+  outline: none; cursor: pointer; border-radius: 1px;
+}
+.audio-volume::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 10px; height: 10px;
+  border-radius: 50%; background: var(--gold); cursor: pointer;
+}
+.audio-volume::-moz-range-thumb {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--gold); cursor: pointer; border: none;
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
   header, main { padding: 24px 20px; }
@@ -1386,12 +1430,35 @@ function closeModalDirect() {
 }
 document.addEventListener('keydown', e => { if(e.key==='Escape') closeModalDirect(); });
 </script>
-<div id="bg-audio" style="position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;pointer-events:none;">
-  <iframe id="yt-audio" width="1" height="1"
-    src="https://www.youtube.com/embed/G_2xofNvwTA?autoplay=1&loop=1&playlist=G_2xofNvwTA&controls=0&mute=0&volume=20"
-    allow="autoplay"
-    frameborder="0">
-  </iframe>
+<audio id="bgAudio" loop preload="auto">
+  <source src="background.mp3" type="audio/mpeg">
+</audio>
+
+<div class="audio-player">
+  <button class="audio-play-btn" id="audioBtn" onclick="toggleAudio()" title="Play / Pause">
+    <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M8 5v14l11-7z"/></svg>
+    <svg id="iconPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+  </button>
+  <span class="audio-label">Soundtrack</span>
+  <input class="audio-volume" type="range" id="audioVolume" min="0" max="1" step="0.05" value="0.35" oninput="setVolume(this.value)" title="Volume">
 </div>
+
+<script>
+const audio = document.getElementById('bgAudio');
+audio.volume = 0.35;
+function toggleAudio() {
+  if (audio.paused) {
+    audio.play().then(() => {
+      document.getElementById('iconPlay').style.display = 'none';
+      document.getElementById('iconPause').style.display = 'block';
+    }).catch(() => {});
+  } else {
+    audio.pause();
+    document.getElementById('iconPlay').style.display = 'block';
+    document.getElementById('iconPause').style.display = 'none';
+  }
+}
+function setVolume(v) { audio.volume = parseFloat(v); }
+</script>
 </body>
 </html>
