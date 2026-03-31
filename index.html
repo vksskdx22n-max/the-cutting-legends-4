@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cutting Horse Heritage — v1.2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sand: #C9B99A;
+  --dust: #E8DECE;
+  --leather: #8B5E3C;
+  --dark: #1A1208;
+  --midnight: #0D0A05;
+  --gold: #C8922A;
+  --gold-light: #E5B860;
+  --rust: #A0522D;
+  --cream: #F5EFE6;
+  --gray-warm: #6B5E4E;
+  --green-sage: #5C6B4A;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Cormorant Garamond', Georgia, serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--midnight);
+  color: var(--dust);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* NOISE TEXTURE OVERLAY */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:1000;
+  opacity:0.4;
+}
+
+/* HEADER */
+header {
+  position: relative;
+  padding: 60px 40px 40px;
+  border-bottom: 1px solid rgba(200,146,42,0.2);
+  background: linear-gradient(180deg, rgba(26,18,8,0) 0%, rgba(26,18,8,0.8) 100%);
+  overflow: hidden;
+}
+
+.header-bg {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse 60% 80% at 80% 50%, rgba(139,94,60,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 20% 30%, rgba(200,146,42,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.header-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  opacity: 0.8;
+}
+
+h1 {
+  font-family: var(--font-display);
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 900;
+  line-height: 1.0;
+  color: var(--cream);
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+
+h1 em {
+  font-style: italic;
+  color: var(--gold);
+}
+
+.header-sub {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--sand);
+  opacity: 0.7;
+  margin-bottom: 32px;
+}
+
+.header-stats {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--gold-light);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--gray-warm);
+  text-transform: uppercase;
+}
+
+/* VERSION BADGE */
+.version-badge {
+  position: absolute;
+  top: 24px;
+  right: 40px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  color: var(--gold);
+  background: rgba(200,146,42,0.1);
+  border: 1px solid rgba(200,146,42,0.3);
+  padding: 6px 12px;
+  border-radius: 2px;
+}
+.lang-toggle {
+  position: absolute;
+  top: 24px;
+  right: 160px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(200,146,42,0.06);
+  border: 1px solid rgba(200,146,42,0.2);
+  padding: 4px 10px;
+  border-radius: 2px;
+}
+.lang-btn {
+  background: none;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: var(--gray-warm);
+  cursor: pointer;
+  padding: 2px 4px;
+  transition: color 0.2s;
+}
+.lang-btn.active { color: var(--gold); }
+.lang-btn:hover { color: var(--sand); }
+
+/* NAV TABS */
+nav {
+  display: flex;
+  gap: 0;
+  padding: 0 40px;
+  border-bottom: 1px solid rgba(200,146,42,0.15);
+  background: rgba(13,10,5,0.6);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+}
+
+.nav-tab {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gray-warm);
+  padding: 18px 24px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  white-space: nowrap;
+}
+
+.nav-tab:hover { color: var(--sand); }
+.nav-tab.active {
+  color: var(--gold);
+  border-bottom-color: var(--gold);
+}
+
+/* MAIN CONTENT */
+main {
+  padding: 40px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.view { display: none; }
+.view.active { display: block; }
+
+/* SEARCH BAR */
+.search-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.search-input {
+  flex: 1;
+  min-width: 280px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(200,146,42,0.2);
+  color: var(--cream);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  padding: 12px 20px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input::placeholder { color: var(--gray-warm); opacity: 0.6; }
+.search-input:focus { border-color: var(--gold); }
+
+.filter-select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(200,146,42,0.2);
+  color: var(--sand);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 12px 16px;
+  outline: none;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+}
+
+.filter-select option { background: var(--dark); }
+
+/* HORSE GRID */
+.horse-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* HORSE CARD */
+.horse-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(200,146,42,0.12);
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.horse-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+
+.horse-card:hover {
+  background: rgba(200,146,42,0.06);
+  border-color: rgba(200,146,42,0.3);
+  transform: translateY(-2px);
+}
+
+.horse-card:hover::before { opacity: 1; }
+
+.card-sex {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.card-sex.stallion { color: #6B9CC8; }
+.card-sex.mare { color: #C87BA0; }
+.card-sex.trainer { color: var(--green-sage); }
+
+.card-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cream);
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+
+.card-years {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gray-warm);
+  margin-bottom: 12px;
+  letter-spacing: 0.1em;
+}
+
+.card-pedigree {
+  font-size: 14px;
+  color: var(--sand);
+  opacity: 0.8;
+  margin-bottom: 16px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 1px;
+}
+
+.tag.sire { background: rgba(107,156,200,0.15); color: #6B9CC8; border: 1px solid rgba(107,156,200,0.2); }
+.tag.competitor { background: rgba(200,146,42,0.15); color: var(--gold); border: 1px solid rgba(200,146,42,0.2); }
+.tag.broodmare { background: rgba(200,123,160,0.15); color: #C87BA0; border: 1px solid rgba(200,123,160,0.2); }
+.tag.founder { background: rgba(92,107,74,0.2); color: #8BAE6E; border: 1px solid rgba(92,107,74,0.3); }
+.tag.trainer-tag { background: rgba(92,107,74,0.15); color: #8BAE6E; border: 1px solid rgba(92,107,74,0.2); }
+
+.card-earnings {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--gold-light);
+}
+
+.card-gen {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--gray-warm);
+  opacity: 0.5;
+}
+
+/* RESULTS COUNT */
+.results-info {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--gray-warm);
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+/* MODAL / DETAIL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(13,10,5,0.92);
+  z-index: 500;
+  overflow-y: auto;
+  backdrop-filter: blur(8px);
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-overlay.open { display: flex; justify-content: center; align-items: flex-start; padding: 40px 20px; }
+
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.modal-content {
+  background: linear-gradient(135deg, #1A1208 0%, #120D06 100%);
+  border: 1px solid rgba(200,146,42,0.25);
+  max-width: 800px;
+  width: 100%;
+  padding: 0;
+  position: relative;
+  animation: slideUp 0.25s ease;
+  overflow: hidden;
+}
+
+@keyframes slideUp { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  background: none;
+  border: none;
+  color: var(--gray-warm);
+  font-size: 20px;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  z-index: 10;
+  transition: color 0.2s;
+}
+
+.modal-close:hover { color: var(--gold); }
+
+.modal-header {
+  padding: 40px 48px 32px;
+  border-bottom: 1px solid rgba(200,146,42,0.15);
+  position: relative;
+  background: linear-gradient(135deg, rgba(139,94,60,0.08) 0%, transparent 60%);
+}
+
+.modal-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.modal-title {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 900;
+  color: var(--cream);
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.modal-years {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--gray-warm);
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+.modal-body {
+  padding: 32px 48px 48px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.modal-section { }
+
+.modal-section-title {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(200,146,42,0.2);
+}
+
+.modal-data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  gap: 16px;
+}
+
+.modal-data-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--gray-warm);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.modal-data-value {
+  font-size: 15px;
+  color: var(--dust);
+  text-align: right;
+  font-style: italic;
+}
+
+.modal-data-value.gold {
+  color: var(--gold-light);
+  font-style: normal;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.modal-data-value.link-val {
+  color: #6B9CC8;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-style: normal;
+  font-size: 13px;
+}
+
+.modal-show-records {
+  grid-column: 1 / -1;
+}
+
+.show-record-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background: rgba(200,146,42,0.06);
+  border-left: 2px solid var(--gold);
+  margin-bottom: 8px;
+  gap: 16px;
+}
+
+.show-record-event {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--cream);
+}
+
+.show-record-detail {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  text-align: right;
+}
+
+.modal-anecdote {
+  grid-column: 1 / -1;
+}
+
+.anecdote-text {
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--sand);
+  font-style: italic;
+  border-left: 3px solid rgba(200,146,42,0.3);
+  padding-left: 24px;
+}
+
+.pedigree-nav {
+  grid-column: 1 / -1;
+}
+
+.pedigree-nav-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.pedigree-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 8px 16px;
+  border: 1px solid rgba(200,146,42,0.25);
+  color: var(--gold-light);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(200,146,42,0.06);
+  letter-spacing: 0.05em;
+}
+
+.pedigree-link:hover {
+  background: rgba(200,146,42,0.15);
+  border-color: var(--gold);
+}
+
+/* RANKINGS VIEW */
+.rankings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 32px;
+}
+
+.ranking-section {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(200,146,42,0.12);
+  overflow: hidden;
+}
+
+.ranking-header {
+  padding: 20px 24px;
+  background: rgba(200,146,42,0.06);
+  border-bottom: 1px solid rgba(200,146,42,0.15);
+}
+
+.ranking-title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.ranking-item {
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ranking-item:hover { background: rgba(200,146,42,0.05); }
+.ranking-item:last-child { border-bottom: none; }
+
+.rank-num {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  color: rgba(200,146,42,0.25);
+  width: 36px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.rank-name {
+  font-family: var(--font-display);
+  font-size: 17px;
+  color: var(--cream);
+  flex: 1;
+}
+
+.rank-value {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--gold-light);
+  text-align: right;
+}
+
+/* LINEAGE VIEW */
+.lineage-container {
+  overflow-x: auto;
+  padding: 20px 0;
+}
+
+.lineage-intro {
+  font-size: 17px;
+  color: var(--sand);
+  font-style: italic;
+  margin-bottom: 40px;
+  max-width: 700px;
+  line-height: 1.8;
+  border-left: 3px solid rgba(200,146,42,0.3);
+  padding-left: 24px;
+}
+
+.generation-row {
+  margin-bottom: 48px;
+}
+
+.gen-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  opacity: 0.7;
+}
+
+.gen-horses {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.gen-chip {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-style: italic;
+  padding: 8px 18px;
+  border: 1px solid rgba(200,146,42,0.2);
+  color: var(--dust);
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(255,255,255,0.02);
+  position: relative;
+}
+
+.gen-chip:hover {
+  background: rgba(200,146,42,0.08);
+  border-color: rgba(200,146,42,0.4);
+  color: var(--cream);
+}
+
+.gen-chip.stallion-chip { border-left: 3px solid #6B9CC8; }
+.gen-chip.mare-chip { border-left: 3px solid #C87BA0; }
+
+.lineage-connector {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: rgba(200,146,42,0.2);
+  margin: 8px 0;
+  padding-left: 24px;
+}
+
+/* EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 80px 40px;
+  color: var(--gray-warm);
+}
+
+.empty-state-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  opacity: 0.4;
+}
+
+.empty-state-text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 22px;
+  color: var(--sand);
+  opacity: 0.5;
+}
+
+/* FOOTER */
+footer {
+  padding: 32px 40px;
+  border-top: 1px solid rgba(200,146,42,0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: gap;
+  margin-top: 80px;
+}
+
+.footer-text {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--gray-warm);
+  text-transform: uppercase;
+  opacity: 0.6;
+}
+
+/* PHOTO SIDEBAR */
+.modal-photo {
+  position: absolute;
+  top: 32px;
+  right: 72px;
+  width: 140px;
+  height: 140px;
+  border: 1px solid rgba(200,146,42,0.25);
+  overflow: hidden;
+  background: rgba(255,255,255,0.03);
+}
+.modal-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: sepia(20%) contrast(1.05);
+}
+.modal-photo-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  opacity: 0.2;
+}
+
+/* VIDEO SECTION */
+.modal-video {
+  grid-column: 1 / -1;
+  margin-top: 8px;
+}
+.video-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255,0,0,0.08);
+  border: 1px solid rgba(255,0,0,0.25);
+  color: #FF6B6B;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  padding: 10px 20px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.video-btn:hover {
+  background: rgba(255,0,0,0.15);
+  border-color: rgba(255,0,0,0.4);
+}
+.video-btn svg { flex-shrink: 0; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  header, main { padding: 24px 20px; }
+  nav { padding: 0 20px; overflow-x: auto; }
+  .modal-body { grid-template-columns: 1fr; }
+  .modal-content { margin: 0; }
+  .modal-header, .modal-body { padding: 24px; }
+  h1 { font-size: 32px; }
+  .header-stats { gap: 24px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-bg"></div>
+  <div class="version-badge">v 2.1 — 2026</div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
+    <span style="color:var(--gray-warm);opacity:0.4;">|</span>
+    <button class="lang-btn" id="btnIT" onclick="setLang('it')">IT</button>
+  </div>
+  <div class="header-eyebrow">🐴 <span data-en="Cutting Horse Heritage Database" data-it="Database del Patrimonio del Cutting">Cutting Horse Heritage Database</span></div>
+  <h1><span data-en="The" data-it="Le">The</span> <em><span data-en="Legends" data-it="Leggende">Legends</span></em><br><span data-en="of Cutting" data-it="del Cutting">of Cutting</span></h1>
+  <p class="header-sub"><span data-en="Genetics, history and champions of world cutting" data-it="Genetica, storia e campioni del cutting horse mondiale">Genetics, history and champions of world cutting</span></p>
+  <div class="header-stats" id="headerStats">
+    <div class="stat-item">
+      <span class="stat-num" id="statHorses">—</span>
+      <span class="stat-label" data-en="Horses & Mares" data-it="Cavalli & Fattrici">Horses & Mares</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="statTrainers">—</span>
+      <span class="stat-label" data-en="Legendary Trainers" data-it="Trainer Leggendari">Legendary Trainers</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="statGenerations">5</span>
+      <span class="stat-label" data-en="Generations" data-it="Generazioni">Generations</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num" id="statEarnings">—</span>
+      <span class="stat-label" data-en="Total Progeny Earnings" data-it="Earnings Progenie Totali">Total Progeny Earnings</span>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <button class="nav-tab active" onclick="showView('horses')" data-en="🐎 Horses" data-it="🐎 Cavalli">🐎 Horses</button>
+  <button class="nav-tab" onclick="showView('rankings')" data-en="🏆 Rankings" data-it="🏆 Classifiche">🏆 Rankings</button>
+  <button class="nav-tab" onclick="showView('lineage')" data-en="🌳 Lineage" data-it="🌳 Discendenza">🌳 Lineage</button>
+  <button class="nav-tab" onclick="showView('trainers')" data-en="🤠 Trainers" data-it="🤠 Trainer">🤠 Trainers</button>
+</nav>
+
+<main>
+
+  <!-- HORSES VIEW -->
+  <div class="view active" id="view-horses">
+    <div class="search-row">
+      <input class="search-input" type="text" placeholder="Search by name, bloodline, trainer..." id="searchInput" oninput="filterHorses()">
+      <select class="filter-select" id="filterSex" onchange="filterHorses()">
+        <option value="">All — Stallions & Mares</option>
+        <option value="stallion">Stallions only</option>
+        <option value="mare">Mares only</option>
+      </select>
+      <select class="filter-select" id="filterRole" onchange="filterHorses()">
+        <option value="">All roles</option>
+        <option value="founder">Founders</option>
+        <option value="sire">Sires</option>
+        <option value="competitor">Champions</option>
+        <option value="broodmare">Broodmares</option>
+      </select>
+      <select class="filter-select" id="filterGen" onchange="filterHorses()">
+        <option value="">All generations</option>
+        <option value="-1">Generation 0 — Founders</option>
+        <option value="0">Generation I</option>
+        <option value="1">Generation II</option>
+        <option value="2">Generation III</option>
+        <option value="3">Generation IV</option>
+        <option value="4">Generation V — Modern</option>
+      </select>
+    </div>
+    <div class="results-info" id="resultsInfo"></div>
+    <div class="horse-grid" id="horseGrid"></div>
+  </div>
+
+  <!-- RANKINGS VIEW -->
+  <div class="view" id="view-rankings">
+    <div class="rankings-grid" id="rankingsGrid"></div>
+  </div>
+
+  <!-- LINEAGE VIEW -->
+  <div class="view" id="view-lineage">
+    <p class="lineage-intro"></p>
+    <div id="lineageTree"></div>
+  </div>
+
+  <!-- TRAINERS VIEW -->
+  <div class="view" id="view-trainers">
+    <div class="horse-grid" id="trainersGrid"></div>
+  </div>
+
+</main>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-content" id="modalContent"></div>
+</div>
+
+<footer>
+  <span class="footer-text">Cutting Horse Heritage Database — v1.2</span>
+  <span class="footer-text" data-en="Data: certified sources only — NCHA / AllBreedPedigree" data-it="Dati: solo fonti certificate — NCHA / AllBreedPedigree">Data: certified sources only — NCHA / AllBreedPedigree</span>
+</footer>
+
+<script>
+// ─── DATABASE (embedded) ─────────────────────────────────────────────────────
+const DB = {"meta": {"version": "1.0", "created": "2026-03-29", "description": "Cutting Horse Heritage Database"}, "horses": [{"id": "doc-bar", "name": "Doc Bar", "born": 1956, "died": 1992, "sex": "stallion", "color": "chestnut", "sire_id": "three-bars", "sire_name": "Three Bars", "dam_name": "Dandy Doll", "dam_sire_name": "Texas Dandy", "breeder": "Carl Breed, Arizona", "owner_historic": "Dr. Stephen Jensen", "role": ["founder", "sire"], "ncha_earnings": 11495, "progeny_earnings": null, "show_records": [{"event": "NCHA", "note": "Non fu un grande campione da gara — la sua grandezza fu come sire"}], "bloodline": "Doc Bar", "generation": 0, "anecdotes": "Doc Bar è considerato il più influente sire nella storia del cutting horse. Acquistato quasi per caso da Dr. Stephen Jensen come cavallo da barrel racing, rivelò un'attitudine al cow work straordinaria. Quasi tutti i cutting horse moderni risalgono a lui. La sua linea domina il cutting mondiale da oltre 60 anni. Era un Quarter Horse registrato AQHA con forte sangue Thoroughbred da Three Bars.", "links": {"allbreed": "https://www.allbreedpedigree.com/doc+bar"}, "anecdotes_en": "Doc Bar is considered the most influential sire in cutting horse history. Purchased almost by chance by Dr. Stephen Jensen as a barrel racing prospect, he revealed an extraordinary aptitude for cow work. Nearly every modern cutting horse traces back to him. His line has dominated world cutting for over 60 years. He was an AQHA-registered Quarter Horse with strong Thoroughbred blood from Three Bars.", "youtube_search": "https://www.youtube.com/results?search_query=Doc+Bar+cutting+horse+NCHA"}, {"id": "three-bars", "name": "Three Bars", "born": 1940, "died": 1968, "sex": "stallion", "color": "chestnut", "sire_id": null, "sire_name": "Percentage (TB)", "dam_name": "Myrtle Dee", "dam_sire_name": "Luke McLuke (TB)", "breeder": "Jim Doyle, Arizona", "owner_historic": "Sidney Vail", "role": ["founder", "sire"], "ncha_earnings": null, "progeny_earnings": null, "show_records": [], "bloodline": "Thoroughbred", "generation": -1, "anecdotes": "Three Bars era un Thoroughbred di razza pura che divenne il sire più influente nella velocità del Quarter Horse. Padre di Doc Bar, portò nelle linee cutting una velocità esplosiva e una muscolatura fine che ancora oggi si riconosce nei discendenti. La sua influenza nel Quarter Horse performance è paragonabile a quella di Northern Dancer nel Thoroughbred.", "links": {"allbreed": "https://www.allbreedpedigree.com/three+bars"}, "anecdotes_en": "Three Bars was a purebred Thoroughbred who became the most influential sire for speed in the Quarter Horse. Father of Doc Bar, he brought explosive speed and refined musculature to cutting lines that is still recognizable in descendants today. His influence on Quarter Horse performance is comparable to that of Northern Dancer in the Thoroughbred.", "youtube_search": "https://www.youtube.com/results?search_query=Three+Bars+Quarter+Horse"}, {"id": "king-p234", "name": "King P-234", "born": 1932, "died": 1958, "sex": "stallion", "color": "sorrel", "sire_id": null, "sire_name": "Zantanon", "dam_name": "Jabalina", "dam_sire_name": null, "breeder": "Jess Hankins, Texas", "owner_historic": "Jess Hankins", "role": ["founder", "sire"], "ncha_earnings": null, "progeny_earnings": null, "show_records": [], "bloodline": "King", "generation": -1, "anecdotes": "King P-234 è il capostipite della linea 'King' — una delle famiglie più importanti del Quarter Horse da lavoro. Allevato in Texas da Jess Hankins, era famoso per il temperamento eccezionale e l'istinto bovino naturale. La sua linea si incrociò con quella di Doc Bar per produrre alcune delle combinazioni più potenti del cutting moderno.", "links": {"allbreed": "https://www.allbreedpedigree.com/king+p-234"}, "anecdotes_en": "King P-234 is the foundation sire of the 'King' line — one of the most important families in the working Quarter Horse. Bred in Texas by Jess Hankins, he was renowned for his exceptional temperament and natural cow instinct. His line crossed with Doc Bar's to produce some of the most powerful combinations in modern cutting.", "youtube_search": "https://www.youtube.com/results?search_query=King+P234+Quarter+Horse+cutting"}, {"id": "peppy-san", "name": "Peppy San", "born": 1959, "died": 1988, "sex": "stallion", "color": "gray", "sire_id": null, "sire_name": "Leo San", "dam_name": "Peppy Belle", "dam_sire_name": "Bert", "breeder": "Buster Welch", "owner_historic": "Buster Welch / Helen Groves", "role": ["founder", "sire"], "ncha_earnings": 17629, "progeny_earnings": null, "show_records": [{"event": "NCHA Futurity", "year": 1962, "placing": "finalist"}], "bloodline": "Peppy San", "generation": 0, "anecdotes": "Peppy San fu allevato e addestrato dal leggendario Buster Welch, uno dei trainer più influenti della storia del cutting. Capostipite della famiglia 'Peppy San', trasmise un'eccezionale attitudine bovina e un movimento basso e fluido che divenne il marchio di fabbrica della linea. Il suo figlio più famoso, Mr San Peppy, portò la linea a livello mondiale.", "links": {"allbreed": "https://www.allbreedpedigree.com/peppy+san"}, "anecdotes_en": "Peppy San was bred and trained by the legendary Buster Welch, one of the most influential trainers in cutting history. Foundation sire of the 'Peppy San' family, he passed on exceptional cow sense and a low, fluid movement that became the hallmark of the line. His most famous son, Mr San Peppy, brought the line to world-class level.", "youtube_search": "https://www.youtube.com/results?search_query=Peppy+San+cutting+horse+NCHA"}, {"id": "poco-bueno", "name": "Poco Bueno", "born": 1944, "died": 1969, "sex": "stallion", "color": "brown", "sire_id": null, "sire_name": "King P-234", "dam_name": "Sheilwin", "dam_sire_name": "King Levis", "breeder": "Ed Craft", "owner_historic": "Tex Thornton", "role": ["founder", "sire"], "ncha_earnings": null, "progeny_earnings": null, "show_records": [{"event": "NCHA Hall of Fame", "note": "Inductee"}], "bloodline": "King", "generation": -1, "anecdotes": "Poco Bueno è uno dei Quarter Horse più famosi della storia. Figlio di King P-234, fu un campione versatile da reining e cow work. La sua figlia Poco Lena — dam di Doc O'Lena — creò il ponte fondamentale tra la linea King e la linea Doc Bar. Poco Bueno è presente nel pedigree di quasi tutti i cutting horse moderni attraverso questa connessione.", "links": {"allbreed": "https://www.allbreedpedigree.com/poco+bueno"}, "anecdotes_en": "Poco Bueno is one of the most famous Quarter Horses in history. Son of King P-234, he was a versatile champion in reining and cow work. His daughter Poco Lena — dam of Doc O'Lena — created the fundamental genetic bridge between the King line and the Doc Bar line. Poco Bueno appears in the pedigree of nearly every modern cutting horse through this connection.", "youtube_search": "https://www.youtube.com/results?search_query=Poco+Bueno+Quarter+Horse"}, {"id": "poco-lena", "name": "Poco Lena", "born": 1949, "died": 1970, "sex": "mare", "color": "brown", "sire_id": null, "sire_name": "Poco Bueno", "dam_name": "Sheilwin", "dam_sire_name": null, "breeder": "Ed Craft", "owner_historic": "varios", "role": ["broodmare", "competitor"], "ncha_earnings": 22890, "progeny_earnings": null, "show_records": [{"event": "NCHA Hall of Fame", "note": "Inductee"}, {"event": "NCHA World Champion", "year": 1952}], "bloodline": "King", "generation": -1, "anecdotes": "Poco Lena fu una delle prime grandi campionesse del cutting — World Champion nel 1952. Come fattrice, la sua unione con Doc Bar produsse Doc O'Lena, creando il ponte genetico più importante della storia del cutting. Poco Lena rappresenta la fusione tra la tradizione del lavoro bovino texano (linea King/Poco Bueno) e il sangue veloce di Doc Bar.", "links": {"allbreed": "https://www.allbreedpedigree.com/poco+lena"}, "anecdotes_en": "Poco Lena was one of the first great cutting champions — World Champion in 1952. As a broodmare, her union with Doc Bar produced Doc O'Lena, creating the most important genetic bridge in cutting history. Poco Lena represents the fusion of the Texas cow work tradition (King/Poco Bueno line) with the speed blood of Doc Bar.", "youtube_search": "https://www.youtube.com/results?search_query=Poco+Lena+cutting+horse+NCHA+1952"}, {"id": "doc-olena", "name": "Doc O'Lena", "born": 1967, "died": 1993, "sex": "stallion", "color": "blue roan", "sire_id": "doc-bar", "sire_name": "Doc Bar", "dam_name": "Poco Lena", "dam_sire_name": "Poco Bueno", "breeder": "Matlock Rose", "owner_historic": "Milo and Tom Mimms", "role": ["sire", "competitor"], "ncha_earnings": 32860, "progeny_earnings": null, "show_records": [{"event": "NCHA Futurity", "year": 1970, "placing": 1, "class": "Open", "trainer": "Shorty Freeman"}, {"event": "NCHA Hall of Fame", "note": "Inductee"}], "bloodline": "Doc Bar", "generation": 1, "anecdotes": "Doc O'Lena è forse il figlio più iconico di Doc Bar. Addestrato dal leggendario Shorty Freeman, vinse il NCHA Futurity nel 1970 e divenne uno dei sire più influenti del cutting. La combinazione Doc Bar x Poco Lena creò una sinergia genetica straordinaria: cow sense, atletismo e temperamento. Il suo sangue scorre in quasi tutti i campioni moderni. Il nome 'O'Lena' deriva dalla dam Poco Lena, a sua volta figlia del grande Poco Bueno.", "links": {"allbreed": "https://www.allbreedpedigree.com/doc+o'lena"}, "anecdotes_en": "Doc O'Lena is perhaps the most iconic son of Doc Bar. Trained by the legendary Shorty Freeman, he won the NCHA Futurity in 1970 and became one of the most influential cutting sires. The Doc Bar x Poco Lena combination created an extraordinary genetic synergy: cow sense, athleticism and temperament. His blood flows through nearly every modern champion. The name 'O'Lena' derives from his dam Poco Lena, herself a daughter of the great Poco Bueno.", "youtube_search": "https://www.youtube.com/results?search_query=Doc+O%27Lena+NCHA+Futurity+1970+cutting"}, {"id": "mr-san-peppy", "name": "Mr San Peppy", "born": 1968, "died": 1987, "sex": "stallion", "color": "sorrel", "sire_id": "peppy-san", "sire_name": "Peppy San", "dam_name": "Peppy's Girl", "dam_sire_name": "Ole Man", "breeder": "Buster Welch", "owner_historic": "Helen Groves", "role": ["sire", "competitor"], "ncha_earnings": 28527, "progeny_earnings": null, "show_records": [{"event": "NCHA Futurity", "year": 1972, "placing": 1, "class": "Open", "trainer": "Buster Welch"}], "bloodline": "Peppy San", "generation": 1, "anecdotes": "Mr San Peppy fu addestrato dal padre putativo del cutting moderno, Buster Welch. Vinse il NCHA Futurity 1972 e divenne il padre di Peppy San Badger — il cavallo che avrebbe rivoluzionato il cutting negli anni '80. La linea Peppy San attraverso Mr San Peppy è oggi una delle più diffuse al mondo.", "links": {"allbreed": "https://www.allbreedpedigree.com/mr+san+peppy"}, "anecdotes_en": "Mr San Peppy was trained by the godfather of modern cutting, Buster Welch. He won the 1972 NCHA Futurity and became the sire of Peppy San Badger — the horse that would revolutionize cutting in the 1980s. The Peppy San line through Mr San Peppy is today one of the most widespread in the world.", "youtube_search": "https://www.youtube.com/results?search_query=Mr+San+Peppy+NCHA+Futurity+1972+cutting"}, {"id": "docs-hickory", "name": "Doc's Hickory", "born": 1966, "died": 1993, "sex": "stallion", "color": "brown", "sire_id": "doc-bar", "sire_name": "Doc Bar", "dam_name": "Della P", "dam_sire_name": "Hard Twist", "breeder": "Dr. Stephen Jensen", "owner_historic": "varios", "role": ["sire", "competitor"], "ncha_earnings": 24890, "progeny_earnings": null, "show_records": [{"event": "NCHA Futurity", "year": 1969, "placing": 1, "class": "Open"}], "bloodline": "Doc Bar", "generation": 1, "anecdotes": "Doc's Hickory fu uno dei primi grandi figli di Doc Bar a dominare il Futurity. Padre di High Brow Hickory e nonno di High Brow Cat — una linea diretta che porta al campione più influente dell'era moderna. La sua trasmissione genetica si concentrò sull'eccezionale 'cow sense' e sulla capacità di lavorare in basso.", "links": {"allbreed": "https://www.allbreedpedigree.com/doc's+hickory"}, "anecdotes_en": "Doc's Hickory was one of the first great sons of Doc Bar to dominate the Futurity. Sire of High Brow Hickory and grandsire of High Brow Cat — a direct line leading to the most influential champion of the modern era. His genetic transmission focused on exceptional cow sense and the ability to work low.", "youtube_search": "https://www.youtube.com/results?search_query=Doc%27s+Hickory+NCHA+Futurity+1969+cutting"}, {"id": "freckles-playboy", "name": "Freckles Playboy", "born": 1969, "died": 1997, "sex": "stallion", "color": "palomino", "sire_id": null, "sire_name": "Jewel's Leo Bars", "dam_name": "Gay Bar Belle", "dam_sire_name": "Three Bars", "breeder": "Paul Curtner", "owner_historic": "varios", "role": ["sire", "competitor"], "ncha_earnings": 93945, "progeny_earnings": null, "show_records": [{"event": "NCHA Futurity", "year": 1972, "placing": "finalist"}, {"event": "NCHA Hall of Fame", "note": "Inductee"}], "bloodline": "Freckles Playboy", "generation": 1, "anecdotes": "Freckles Playboy fu uno dei palomino più famosi del cutting. Addestrato da diversi grandi trainer, divenne un sire eccezionale con progenie di altissimo livello. La sua linea portò nel cutting un tipo fisico più fine e atletico, con una particolare fluidità nel movimento. Padre di Playgirl Cat e nonno di Smooth As A Cat.", "links": {"allbreed": "https://www.allbreedpedigree.com/freckles+playboy"}, "anecdotes_en": "Freckles Playboy was one of the most famous palominos in cutting. Trained by several great horsemen, he became an exceptional sire with top-level offspring. His line brought a more refined, athletic type to cutting, with a particular fluidity of movement. Sire of Playgirl Cat and grandsire of Smooth As A Cat.", "youtube_search": "https://www.youtube.com/results?search_query=Freckles+Playboy+cutting+horse+NCHA"}, {"id": "peppy-san-badger", "name": "Peppy San Badger", "born": 1974, "died": 2004, "sex": "stallion", "color": "sorrel", "sire_id": "mr-san-peppy", "sire_name": "Mr San Peppy", "dam_name": "Sugar Badger", "dam_sire_name": "Badger's Gold", "breeder": "W.B. Watt", "owner_historic": "Helen Groves / varios", "role": ["sire", "competitor"], "ncha_earnings": 172711, "progeny_earnings": null, "show_records": [{"event": "NCHA Futurity", "year": 1977, "placing": 1, "class": "Open", "trainer": "Buster Welch"}, {"event": "NCHA World Champion", "year": 1979, "class": "Open"}, {"event": "NCHA Hall of Fame", "note": "Inductee"}], "bloodline": "Peppy San", "generation": 1, "anecdotes": "Conosciuto universalmente come 'Little Peppy', Peppy San Badger è uno dei sire più influenti nella storia del cutting. Addestrato da Buster Welch, dominò le competizioni alla fine degli anni '70. Come sire, generò Dual Pep, Smart Little Lena e una famiglia di campioni che definisce ancora oggi il cutting mondiale. È il nonno materno di Peptoboonsmal. La sua progenie ha vinto decine di milioni di dollari.", "links": {"allbreed": "https://www.allbreedpedigree.com/peppy+san+badger"}, "anecdotes_en": "Universally known as 'Little Peppy', Peppy San Badger is one of the most influential sires in cutting history. Trained by Buster Welch, he dominated competition in the late 1970s. As a sire, he produced Dual Pep, Smart Little Lena, and a family of champions that still defines world cutting today. He is the maternal grandsire of Peptoboonsmal. His progeny has earned tens of millions of dollars.", "youtube_search": "https://www.youtube.com/results?search_query=Peppy+San+Badger+NCHA+Futurity+1977+cutting"}, {"id": "royal-blue-boon", "name": "Royal Blue Boon", "born": 1981, "died": null, "sex": "mare", "color": "sorrel", "sire_id": null, "sire_name": "Boon Bar", "dam_name": "Royal Miss Wimpy", "dam_sire_name": "Mr Wimpy", "breeder": "varios", "owner_historic": "varios", "role": ["broodmare"], "ncha_earnings": null, "progeny_earnings": null, "show_records": [], "bloodline": "Boon Bar", "generation": 1, "anecdotes": "Royal Blue Boon è la dam di Peptoboonsmal — una delle fattrici più importanti nella storia del cutting. Senza Royal Blue Boon non ci sarebbe Peptoboonsmal, e senza Peptoboonsmal il cutting moderno sarebbe completamente diverso. Un esempio perfetto dell'importanza delle linee materne nella genetica cutting.", "links": {"allbreed": "https://www.allbreedpedigree.com/royal+blue+boon"}, "anecdotes_en": "Royal Blue Boon is the dam of Peptoboonsmal — one of the most important broodmares in cutting history. Without Royal Blue Boon there would be no Peptoboonsmal, and without Peptoboonsmal modern cutting would look completely different. A perfect example of the importance of the female line in cutting genetics.", "youtube_search": "https://www.youtube.com/results?search_query=Royal+Blue+Boon+cutting+horse"}, {"id": "smart-little-lena", "name": "Smart Little Lena", "born": 1979, "died": 2000, "sex": "stallion", "color": "dun", "sire_id": "doc-olena", "sire_name": "Doc O'Lena", "dam_name": "Smart Peppy", "dam_sire_name": "Peppy San Badger", "breeder": "Ed Honnen", "owner_historic": "Hanes Chatham", "role": ["sire", "competitor"], "ncha_earnings": 743275, "progeny_earnings": null, "show_records": [{"event": "NCHA Futurity", "year": 1982, "placing": 1, "class": "Open", "trainer": "Bill Freeman"}, {"event": "NCHA Derby", "year": 1983, "placing": 1, "class": "Open", "trainer": "Bill Freeman"}, {"event": "NCHA Super Stakes", "year": 1983, "placing": 1, "class": "Open", "trainer": "Bill Freeman"}, {"event": "NCHA Triple Crown", "year": 1983, "note": "Primo cavallo nella storia a vincere Futurity, Derby e Super Stakes"}, {"event": "NCHA Hall of Fame", "note": "Inductee"}], "bloodline": "Doc Bar / Peppy San", "generation": 2, "anecdotes": "Smart Little Lena è probabilmente il cutting horse più leggendario di tutti i tempi. Addestrato da Bill Freeman, fu il PRIMO cavallo nella storia a vincere la NCHA Triple Crown — Futurity, Derby e Super Stakes nello stesso anno. Aveva un cow sense soprannaturale e un'atleticità straordinaria. Come sire, generò oltre 100 milioni di dollari in progeny earnings. La combinazione Doc O'Lena x Peppy San Badger creò quello che molti considerano il pedigree perfetto del cutting horse. Morì nel 2000, ma la sua linea domina ancora oggi.", "links": {"allbreed": "https://www.allbreedpedigree.com/smart+little+lena"}, "anecdotes_en": "Smart Little Lena is arguably the most legendary cutting horse of all time. Trained by Bill Freeman, he was the FIRST horse in history to win the NCHA Triple Crown — Futurity, Derby and Super Stakes in the same year. He possessed supernatural cow sense and extraordinary athleticism. As a sire, he produced over 100 million dollars in progeny earnings. The Doc O'Lena x Peppy San Badger combination created what many consider the perfect cutting horse pedigree. He died in 2000, but his line still dominates today.", "youtube_search": "https://www.youtube.com/results?search_query=Smart+Little+Lena+NCHA+Triple+Crown+1983+cutting"}, {"id": "high-brow-hickory", "name": "High Brow Hickory", "born": 1984, "died": 2010, "sex": "stallion", "color": "brown", "sire_id": "docs-hickory", "sire_name": "Doc's Hickory", "dam_name": "Grulla San", "dam_sire_name": "Mr San Peppy", "breeder": "varios", "owner_historic": "varios", "role": ["sire"], "ncha_earnings": 15200, "progeny_earnings": null, "show_records": [], "bloodline": "Doc Bar", "generation": 2, "anecdotes": "High Brow Hickory non fu un grande campione da gara, ma la sua importanza è immensa come sire: è il padre di High Brow Cat, il cavallo che ha rivoluzionato il cutting moderno. La combinazione Doc's Hickory x Grulla San portò una fisicità e un cow sense trasmessi in modo straordinario alla generazione successiva.", "links": {"allbreed": "https://www.allbreedpedigree.com/high+brow+hickory"}, "anecdotes_en": "High Brow Hickory was not a great show competitor, but his importance is immense as a sire: he is the father of High Brow Cat, the horse that revolutionized modern cutting. The Doc's Hickory x Grulla San combination produced a physicality and cow sense that was transmitted in an extraordinary way to the next generation.", "youtube_search": "https://www.youtube.com/results?search_query=High+Brow+Hickory+cutting+horse"}, {"id": "smart-little-kitty", "name": "Smart Little Kitty", "born": 1985, "died": null, "sex": "mare", "color": "sorrel", "sire_id": "smart-little-lena", "sire_name": "Smart Little Lena", "dam_name": "Gay Bar Kitty", "dam_sire_name": "Gay Bar King", "breeder": "varios", "owner_historic": "varios", "role": ["broodmare"], "ncha_earnings": null, "progeny_earnings": null, "show_records": [], "bloodline": "Doc Bar / Peppy San", "generation": 2, "anecdotes": "Smart Little Kitty è la dam di High Brow Cat — il che la rende una delle fattrici più influenti nella storia del cutting. Figlia di Smart Little Lena, portò al suo figlio la combinazione genetica che avrebbe fatto la storia. La linea Smart Little Lena nelle dam è ancora oggi uno dei pedigree più ricercati dagli allevatori.", "links": {"allbreed": "https://www.allbreedpedigree.com/smart+little+kitty"}, "anecdotes_en": "Smart Little Kitty is the dam of High Brow Cat — making her one of the most influential broodmares in cutting history. Daughter of Smart Little Lena, she passed on to her son the genetic combination that would make history. The Smart Little Lena female line remains one of the most sought-after pedigrees among breeders today.", "youtube_search": "https://www.youtube.com/results?search_query=Smart+Little+Kitty+cutting+horse"}, {"id": "dual-pep", "name": "Dual Pep", "born": 1985, "died": 2013, "sex": "stallion", "color": "sorrel", "sire_id": "peppy-san-badger", "sire_name": "Peppy San Badger", "dam_name": "Miss Dual Doc", "dam_sire_name": "Doc O'Lena", "breeder": "varios", "owner_historic": "varios", "role": ["sire", "competitor"], "ncha_earnings": 155000, "progeny_earnings": null, "show_records": [{"event": "NCHA Futurity", "year": 1988, "placing": 1, "class": "Open"}], "bloodline": "Peppy San / Doc Bar", "generation": 2, "anecdotes": "Dual Pep portò la linea Peppy San Badger alla generazione successiva combinandola con sangue Doc O'Lena. Padre di Dual Rey — uno dei sire più importanti dell'era moderna. Il suo pedigree incrociava le due linee dominanti del cutting creando una progenie di altissimo livello atletico.", "links": {"allbreed": "https://www.allbreedpedigree.com/dual+pep"}, "anecdotes_en": "Dual Pep carried the Peppy San Badger line into the next generation, combining it with Doc O'Lena blood. Sire of Dual Rey — one of the most important sires of the modern era. His pedigree crossed the two dominant cutting lines, creating offspring of the highest athletic level.", "youtube_search": "https://www.youtube.com/results?search_query=Dual+Pep+NCHA+Futurity+1988+cutting"}, {"id": "pepto-bueno", "name": "Pepto Bueno", "born": 1985, "died": 2009, "sex": "stallion", "color": "sorrel", "sire_id": "peppy-san-badger", "sire_name": "Peppy San Badger", "dam_name": "Boon Bar Belle", "dam_sire_name": "Boon Bar", "breeder": "varios", "owner_historic": "varios", "role": ["sire"], "ncha_earnings": 8500, "progeny_earnings": null, "show_records": [], "bloodline": "Peppy San", "generation": 2, "anecdotes": "Pepto Bueno è importante principalmente come sire di Peptoboonsmal — uno dei cavalli più influenti nella storia del cutting. La sua combinazione Peppy San Badger x Boon Bar creò una progenie con eccezionale cow sense e longevità atletica.", "links": {"allbreed": "https://www.allbreedpedigree.com/pepto+bueno"}, "anecdotes_en": "Pepto Bueno is important primarily as the sire of Peptoboonsmal — one of the most influential horses in cutting history. His Peppy San Badger x Boon Bar combination produced offspring with exceptional cow sense and athletic longevity.", "youtube_search": "https://www.youtube.com/results?search_query=Pepto+Bueno+cutting+horse"}, {"id": "peptoboonsmal", "name": "Peptoboonsmal", "born": 1989, "died": 2015, "sex": "stallion", "color": "sorrel", "sire_id": "pepto-bueno", "sire_name": "Pepto Bueno", "dam_name": "Royal Blue Boon", "dam_sire_name": "Boon Bar", "breeder": "varios", "owner_historic": "varios", "role": ["sire", "competitor"], "ncha_earnings": 178654, "progeny_earnings": 40000000, "show_records": [{"event": "NCHA Futurity", "year": 1992, "placing": 1, "class": "Open", "trainer": "Lindy Burch"}, {"event": "NCHA Hall of Fame", "note": "Inductee"}], "bloodline": "Peppy San", "generation": 2, "anecdotes": "Peptoboonsmal — conosciuto come 'Peppy' negli allevamenti — fu addestrato dalla grande Lindy Burch e vinse il NCHA Futurity 1992. Come sire, generò oltre 40 milioni di dollari in progeny earnings diventando uno dei più importanti della storia. La sua progenie include Boon San Kitty, One Time Pepto e decine di campioni. Morì nel 2015 lasciando un'eredità genetica incalcolabile.", "links": {"allbreed": "https://www.allbreedpedigree.com/peptoboonsmal"}, "anecdotes_en": "Peptoboonsmal — known as 'Peppy' in breeding circles — was trained by the great Lindy Burch and won the 1992 NCHA Futurity. As a sire, he produced over 40 million dollars in progeny earnings, becoming one of the most important in history. His progeny includes Boon San Kitty, One Time Pepto, and dozens of champions. He died in 2015, leaving an incalculable genetic legacy.", "youtube_search": "https://www.youtube.com/results?search_query=Peptoboonsmal+NCHA+Futurity+1992+cutting"}, {"id": "high-brow-cat", "name": "High Brow Cat", "born": 1988, "died": 2015, "sex": "stallion", "color": "brown", "sire_id": "high-brow-hickory", "sire_name": "High Brow Hickory", "dam_name": "Smart Little Kitty", "dam_sire_name": "Smart Little Lena", "breeder": "varios", "owner_historic": "W.T. Waggoner Estate", "role": ["sire", "competitor"], "ncha_earnings": 110800, "progeny_earnings": 80000000, "show_records": [{"event": "NCHA Futurity", "year": 1991, "placing": 1, "class": "Open", "trainer": "Bobby Ingersoll"}, {"event": "NCHA Hall of Fame", "note": "Inductee"}], "bloodline": "Doc Bar", "generation": 2, "anecdotes": "High Brow Cat è il sire più influente della storia moderna del cutting. Il suo pedigree — High Brow Hickory x Smart Little Kitty (figlia di Smart Little Lena) — combinava le due linee dominanti in modo perfetto. Come sire ha generato oltre 80 milioni di dollari in progeny earnings, un record mondiale. Praticamente ogni campione degli anni 2000-2020 ha sangue High Brow Cat. Il W.T. Waggoner Estate in Texas, uno dei ranch più grandi degli USA, fu il suo home per gran parte della carriera da sire.", "links": {"allbreed": "https://www.allbreedpedigree.com/high+brow+cat"}, "anecdotes_en": "High Brow Cat is the most influential sire in modern cutting history. His pedigree — High Brow Hickory x Smart Little Kitty (daughter of Smart Little Lena) — combined the two dominant lines perfectly. As a sire he produced over 80 million dollars in progeny earnings, a world record. Virtually every champion of the 2000–2020 era carries High Brow Cat blood. The W.T. Waggoner Estate in Texas, one of the largest ranches in the USA, was his home for much of his stud career.", "youtube_search": "https://www.youtube.com/results?search_query=High+Brow+Cat+NCHA+Futurity+1991+cutting"}, {"id": "dual-rey", "name": "Dual Rey", "born": 1993, "died": null, "sex": "stallion", "color": "sorrel", "sire_id": "dual-pep", "sire_name": "Dual Pep", "dam_name": "Nurse Rey", "dam_sire_name": "Rey Jay", "breeder": "varios", "owner_historic": "varios", "role": ["sire", "competitor"], "ncha_earnings": 183000, "progeny_earnings": 35000000, "show_records": [{"event": "NCHA Futurity", "year": 1996, "placing": 1, "class": "Open", "trainer": "Benny Guitron"}], "bloodline": "Peppy San / Doc Bar", "generation": 3, "anecdotes": "Dual Rey vinse il NCHA Futurity 1996 addestrato da Benny Guitron e divenne uno dei sire più prolifici dell'era moderna. La sua progenie include Dual Smart Rey, Reydiculous e decine di campioni. Il suo stile di lavoro — basso, fluido, con grande anticipo sul bovino — fu trasmesso ai suoi discendenti in modo straordinariamente consistente.", "links": {"allbreed": "https://www.allbreedpedigree.com/dual+rey"}, "anecdotes_en": "Dual Rey won the 1996 NCHA Futurity trained by Benny Guitron and became one of the most prolific sires of the modern era. His progeny includes Dual Smart Rey, Reydiculous, and dozens of champions. His working style — low, fluid, with great anticipation of the cow — was transmitted to his descendants with extraordinary consistency.", "youtube_search": "https://www.youtube.com/results?search_query=Dual+Rey+NCHA+Futurity+1996+cutting"}, {"id": "one-time-pepto", "name": "One Time Pepto", "born": 1996, "died": null, "sex": "stallion", "color": "sorrel", "sire_id": "peptoboonsmal", "sire_name": "Peptoboonsmal", "dam_name": "One Time Soon", "dam_sire_name": "Sonita's Last", "breeder": "varios", "owner_historic": "varios", "role": ["sire", "competitor"], "ncha_earnings": 379000, "progeny_earnings": 25000000, "show_records": [{"event": "NCHA Futurity", "year": 1999, "placing": 1, "class": "Open"}, {"event": "NCHA Super Stakes", "year": 2000, "placing": 1, "class": "Open"}], "bloodline": "Peppy San", "generation": 3, "anecdotes": "One Time Pepto portò la linea Peptoboonsmal alla sua massima espressione competitiva, vincendo Futurity e Super Stakes. Come sire ha generato una progenie di altissimo livello con caratteristiche di cow sense eccezionali ereditate direttamente dal padre.", "links": {"allbreed": "https://www.allbreedpedigree.com/one+time+pepto"}, "anecdotes_en": "One Time Pepto brought the Peptoboonsmal line to its greatest competitive expression, winning both the Futurity and Super Stakes. As a sire he has produced top-level offspring with exceptional cow sense inherited directly from his father.", "youtube_search": "https://www.youtube.com/results?search_query=One+Time+Pepto+NCHA+Futurity+1999+cutting"}, {"id": "boon-san-kitty", "name": "Boon San Kitty", "born": 1999, "died": null, "sex": "mare", "color": "sorrel", "sire_id": "peptoboonsmal", "sire_name": "Peptoboonsmal", "dam_name": "Kit Kat Sugar", "dam_sire_name": "High Brow Cat", "breeder": "varios", "owner_historic": "varios", "role": ["competitor", "broodmare"], "ncha_earnings": 609004, "progeny_earnings": null, "show_records": [{"event": "NCHA Futurity", "year": 2002, "placing": 1, "class": "Open", "trainer": "Faron Hightower"}, {"event": "NCHA World Champion Mare", "year": 2003}, {"event": "NCHA Hall of Fame", "note": "Inductee"}], "bloodline": "Peppy San / Doc Bar", "generation": 3, "anecdotes": "Boon San Kitty è una delle fattrici più iconiche del cutting. Figlia di Peptoboonsmal x una figlia di High Brow Cat — il pedigree inverso di Metallic Cat. Vinse il NCHA Futurity 2002 e fu World Champion Mare. Come fattrice ha prodotto campioni di alto livello. Un esempio perfetto di come le grandi fattrici siano importanti quanto i grandi stalloni nella genetica cutting.", "links": {"allbreed": "https://www.allbreedpedigree.com/boon+san+kitty"}, "anecdotes_en": "Boon San Kitty is one of the most iconic mares in cutting. Daughter of Peptoboonsmal x a daughter of High Brow Cat — the inverse pedigree of Metallic Cat. She won the 2002 NCHA Futurity and was World Champion Mare. As a broodmare she produced high-level champions. A perfect example of how great broodmares are as important as great stallions in cutting genetics.", "youtube_search": "https://www.youtube.com/results?search_query=Boon+San+Kitty+NCHA+Futurity+2002+cutting"}, {"id": "taris-cat", "name": "Taris Cat", "born": 2002, "died": null, "sex": "mare", "color": "brown", "sire_id": "high-brow-cat", "sire_name": "High Brow Cat", "dam_name": "Tari Peppy", "dam_sire_name": "Peppy San Badger", "breeder": "varios", "owner_historic": "varios", "role": ["competitor", "broodmare"], "ncha_earnings": 345000, "progeny_earnings": null, "show_records": [{"event": "NCHA Futurity", "year": 2005, "placing": 1, "class": "Non-Pro"}, {"event": "NCHA World Champion", "year": 2006, "class": "Non-Pro"}], "bloodline": "Doc Bar / Peppy San", "generation": 4, "anecdotes": "Taris Cat dominò il circuito Non-Pro nei primi anni 2000, dimostrando che la progenie High Brow Cat era eccellente sia in Open che in Non-Pro. Come fattrice ha prodotto progenie di qualità, trasmettendo le caratteristiche bovine della linea paterna.", "links": {"allbreed": "https://www.allbreedpedigree.com/taris+cat"}, "anecdotes_en": "Taris Cat dominated the Non-Pro circuit in the early 2000s, demonstrating that High Brow Cat offspring excelled in both Open and Non-Pro competition. As a broodmare she has produced quality progeny, passing on the cow characteristics of the paternal line.", "youtube_search": "https://www.youtube.com/results?search_query=Taris+Cat+NCHA+cutting+horse"}, {"id": "high-brow-cd", "name": "High Brow CD", "born": 2000, "died": null, "sex": "stallion", "color": "sorrel", "sire_id": "high-brow-cat", "sire_name": "High Brow Cat", "dam_name": "CD Olena", "dam_sire_name": "Doc O'Lena", "breeder": "varios", "owner_historic": "varios", "role": ["sire", "competitor"], "ncha_earnings": 320000, "progeny_earnings": 28000000, "show_records": [{"event": "NCHA Futurity", "year": 2003, "placing": 1, "class": "Open"}], "bloodline": "Doc Bar", "generation": 4, "anecdotes": "High Brow CD è un altro figlio eccezionale di High Brow Cat, questa volta con una dam di linea Doc O'Lena — riportando il sangue delle origini. Il suo pedigree è considerato uno dei più 'puri' nella tradizione Doc Bar. La progenie mostra una consistenza notevole nella trasmissione delle caratteristiche bovine.", "links": {"allbreed": "https://www.allbreedpedigree.com/high+brow+cd"}, "anecdotes_en": "High Brow CD is another exceptional son of High Brow Cat, this time with a Dam of Doc O'Lena lineage — bringing the bloodline back to its origins. His pedigree is considered one of the 'purest' in the Doc Bar tradition. The progeny shows remarkable consistency in transmitting bovine characteristics.", "youtube_search": "https://www.youtube.com/results?search_query=High+Brow+CD+NCHA+Futurity+2003+cutting"}, {"id": "smooth-as-a-cat", "name": "Smooth As A Cat", "born": 2003, "died": null, "sex": "stallion", "color": "palomino", "sire_id": "high-brow-cat", "sire_name": "High Brow Cat", "dam_name": "Shes A Fancy Playgirl", "dam_sire_name": "Freckles Playboy", "breeder": "varios", "owner_historic": "varios", "role": ["sire", "competitor"], "ncha_earnings": 285000, "progeny_earnings": 20000000, "show_records": [{"event": "NCHA Futurity", "year": 2006, "placing": 1, "class": "Open"}], "bloodline": "Doc Bar / Freckles Playboy", "generation": 4, "anecdotes": "Smooth As A Cat fu uno dei palomino più belli mai visti nel cutting — High Brow Cat x una figlia di Freckles Playboy. La sua progenie eredita un tipo fisico eccezionale combinato con il cow sense della linea Doc Bar. Uno dei sire più apprezzati per la qualità estetica e funzionale della progenie.", "links": {"allbreed": "https://www.allbreedpedigree.com/smooth+as+a+cat"}, "anecdotes_en": "Smooth As A Cat was one of the most beautiful palominos ever seen in cutting — High Brow Cat x a daughter of Freckles Playboy. His progeny inherits an exceptional physical type combined with the cow sense of the Doc Bar line. One of the most appreciated sires for the aesthetic and functional quality of his offspring.", "youtube_search": "https://www.youtube.com/results?search_query=Smooth+As+A+Cat+NCHA+Futurity+2006+cutting"}, {"id": "metallic-cat", "name": "Metallic Cat", "born": 2005, "died": null, "sex": "stallion", "color": "red roan", "sire_id": "high-brow-cat", "sire_name": "High Brow Cat", "dam_name": "Chers Shadow", "dam_sire_name": "Peptoboonsmal", "breeder": "varios", "owner_historic": "Alvin & Becky Fults (show career) → Bobby Patton's Rocking P Ranch, Weatherford TX (dal 2015)", "role": ["sire", "competitor"], "ncha_earnings": 637711, "progeny_earnings": 82605984, "show_records": [{"event": "NCHA Futurity", "year": 2008, "placing": 1, "class": "Open", "trainer": "Beau Galyean"}, {"event": "NCHA Super Stakes", "year": 2009, "placing": 1, "class": "Open", "trainer": "Beau Galyean"}, {"event": "NCHA Derby", "year": 2009, "placing": 1, "class": "Open", "trainer": "Beau Galyean"}], "bloodline": "Doc Bar / Peppy San", "generation": 4, "anecdotes": "Metallic Cat è il cavallo più influente del cutting contemporaneo. Roan rosso con un'atleticità spettacolare, addestrato da Beau Galyean vinse Futurity, Super Stakes e Derby — sfiorando la Triple Crown. Il suo pedigree — High Brow Cat x Chers Shadow (Peptoboonsmal) — univa le due famiglie dominanti. Come sire, i suoi figli e figlie hanno già superato i 45 milioni di dollari in earnings. È il cavallo da cutting più fotografato, più cercato e più citato degli ultimi 15 anni.", "links": {"allbreed": "https://www.allbreedpedigree.com/metallic+cat"}, "anecdotes_en": "Metallic Cat is the most influential horse in contemporary cutting. A red roan with spectacular athleticism, trained by Beau Galyean, he won the Futurity, Super Stakes and Derby — narrowly missing the Triple Crown. His pedigree — High Brow Cat x Chers Shadow (Peptoboonsmal) — united the two dominant families. As a sire, his sons and daughters have already surpassed 45 million dollars in earnings. He is the most photographed, most searched and most cited cutting horse of the last 15 years.", "youtube_search": "https://www.youtube.com/results?search_query=Metallic+Cat+NCHA+Futurity+2008+cutting+Beau+Galyean"}, {"id": "stevie-rey-von", "name": "Stevie Rey Von", "born": 2008, "died": null, "sex": "stallion", "color": "sorrel", "sire_id": "dual-rey", "sire_name": "Dual Rey", "dam_name": "Peptos Von", "dam_sire_name": "Peptoboonsmal", "breeder": "varios", "owner_historic": "varios", "role": ["sire", "competitor"], "ncha_earnings": 482000, "progeny_earnings": 15000000, "show_records": [{"event": "NCHA Futurity", "year": 2011, "placing": 1, "class": "Open"}], "bloodline": "Peppy San / Doc Bar", "generation": 4, "anecdotes": "Stevie Rey Von rappresenta la confluenza delle due grandi famiglie — Dual Rey (linea Peppy San) x Peptoboonsmal — in un atleta moderno di altissimo livello. La sua progenie sta emergendo come una delle più promettenti della generazione attuale.", "links": {"allbreed": "https://www.allbreedpedigree.com/stevie+rey+von"}, "anecdotes_en": "Stevie Rey Von represents the confluence of the two great families — Dual Rey (Peppy San line) x Peptoboonsmal — in a modern athlete of the highest level. His progeny is emerging as one of the most promising of the current generation.", "youtube_search": "https://www.youtube.com/results?search_query=Stevie+Rey+Von+NCHA+Futurity+2011+cutting"}, {"id": "hashtag", "name": "Hashtag", "born": 2009, "died": null, "sex": "stallion", "color": "sorrel", "sire_id": "high-brow-cat", "sire_name": "High Brow Cat", "dam_name": "Twice As Smart", "dam_sire_name": "Smart Little Lena", "breeder": "varios", "owner_historic": "varios", "role": ["sire", "competitor"], "ncha_earnings": 261000, "progeny_earnings": 8000000, "show_records": [{"event": "NCHA Futurity", "year": 2012, "placing": 1, "class": "Open"}], "bloodline": "Doc Bar / Peppy San", "generation": 4, "anecdotes": "Hashtag — figlio di High Brow Cat con una dam Smart Little Lena — rappresenta la continuazione della grande tradizione. La sua progenie sta emergendo come una delle più promettenti della nuova generazione, con caratteristiche bovine eccellenti e un tipo fisico molto apprezzato.", "links": {"allbreed": "https://www.allbreedpedigree.com/hashtag"}, "anecdotes_en": "Hashtag — son of High Brow Cat with a Smart Little Lena dam — represents the continuation of the great tradition. His progeny is emerging as one of the most promising of the new generation, with excellent bovine characteristics and a highly appreciated physical type.", "youtube_search": "https://www.youtube.com/results?search_query=Hashtag+NCHA+Futurity+2012+cutting+horse"}, {"id": "lloyd-cox", "name": "Lloyd Cox", "born": 1963, "died": null, "type": "trainer", "nationality": "American (Marietta, Oklahoma)", "active_years": "1985–present", "horses_trained": ["one-time-pepto"], "major_titles": ["NCHA Futurity Open 2010 (One Time Royalty, score 230 — all-time record)", "NCHA #1 Leading Open Rider 2003 ($714,583 in un anno)", "NCHA #1 Leading Open Rider 2010 e 2012", "Primo rider nella storia del Western performance a raggiungere i $10 milioni di lifetime earnings (2021)"], "ncha_lifetime_earnings": 10000000, "anecdotes": "Lloyd Cox è il cowboy più vincente nella storia del cutting. Originario di Delta, Missouri, si è trasferito in Oklahoma dove ancora opera dalla sua base di Marietta. Nel 2021 è diventato il primo rider nella storia del Western performance a superare i $10 milioni di lifetime earnings — un primato assoluto. Ha vinto il NCHA Futurity 2010 su One Time Royalty con il punteggio di 230, uno dei più alti mai registrati nella storia della manifestazione. NCHA Rider Hall of Fame inductee. Conosciuto in tutto il mondo del cutting per la sua gentilezza e disponibilità verso colleghi e amatori — 'one of the nicest guys in cutting' è la definizione che più spesso gli viene attribuita.", "inducted_hall_of_fame": true, "anecdotes_en": "Lloyd Cox is the most successful cowboy in cutting history. Originally from Delta, Missouri, he relocated to Oklahoma where he still operates from his base in Marietta. In 2021 he became the first rider in Western performance history to surpass 10 million dollars in lifetime earnings — an absolute record. He won the 2010 NCHA Futurity on One Time Royalty with a score of 230, one of the highest ever recorded in the event's history. NCHA Rider Hall of Fame inductee. Known throughout the cutting world for his kindness and availability to colleagues and amateurs — 'one of the nicest guys in cutting' is the description most often attributed to him.", "youtube_search": "https://www.youtube.com/results?search_query=Lloyd+Cox+cutting+horse+NCHA"}, {"id": "phil-rapp", "name": "Phil Rapp", "born": 1955, "died": null, "type": "trainer", "nationality": "American (Weatherford, Texas)", "active_years": "1975–present", "horses_trained": [], "major_titles": ["NCHA #2 All-Time Leading Money Earner con oltre $9.4 milioni", "NCHA Open Rider of the Year 2006", "NCHA Super Stakes Open Champion 2006 (Dual Smart Rey)", "NCHA Members Hall of Fame Inductee 2022"], "ncha_lifetime_earnings": 9400000, "anecdotes": "Phil Rapp è il secondo rider di tutti i tempi per lifetime earnings NCHA, con oltre $9.4 milioni. Con sede a Weatherford, Texas — il cuore geografico del cutting mondiale — con la moglie Mary Ann, a sua volta leading money earner nel Non-Pro con oltre $4 milioni. La famiglia Rapp è una dynasty del cutting texano: il figlio Ryan è stato inductee NCHA Non-Pro Hall of Fame nel 2021. Phil ha competuto come professionista per oltre 40 anni, vincendo praticamente ogni titolo disponibile nel circuito NCHA.", "inducted_hall_of_fame": true, "anecdotes_en": "Phil Rapp is the second all-time rider by NCHA lifetime earnings, with over 9.4 million dollars. Based in Weatherford, Texas — the geographic heart of world cutting — together with his wife Mary Ann, herself a leading Non-Pro money earner with over 4 million dollars. The Rapp family is a dynasty of Texas cutting: son Ryan was inducted into the NCHA Non-Pro Hall of Fame in 2021. Phil has competed professionally for over 40 years, winning virtually every available title on the NCHA circuit.", "youtube_search": "https://www.youtube.com/results?search_query=Phil+Rapp+cutting+horse+NCHA"}, {"id": "austin-shepard", "name": "Austin Shepard", "born": 1968, "died": null, "type": "trainer", "nationality": "American (Summerdale, Alabama)", "active_years": "1990–present", "horses_trained": ["high-brow-cd"], "major_titles": ["NCHA Futurity Open Champion 2007 (High Brow CD)", "NCHA Futurity Open Champion 2017 (Dual Reyish)", "NCHA Open World Champion 2017 (Deluxe Checks) — record di winnings in World Finals history ($146,977)", "NCHA Riders Hall of Fame Inductee 2005", "Lifetime earnings: $10,097,851 (2024)"], "ncha_lifetime_earnings": 10097851, "anecdotes": "Austin Shepard è uno dei più grandi trainer della storia del cutting, unico ad aver vinto il Futurity Open due volte (2007 e 2017) e World Champion nello stesso anno 2017. Con sede in Alabama — insolito per un top trainer cutting, tradizionalmente texano — ha costruito una dynasty familiare: il padre Sam Shepard era NCHA Hall of Fame rider, la moglie Stacy NCHA Non-Pro Hall of Fame, e il figlio Cade è stato nel 2016 il più giovane inductee nella storia del NCHA Non-Pro Hall of Fame a 15 anni. Austin ha superato i $10 milioni di lifetime earnings nel 2024.", "inducted_hall_of_fame": true, "anecdotes_en": "Austin Shepard is one of the greatest trainers in cutting history, the only rider to have won the Open Futurity twice (2007 and 2017) and World Champion in the same year 2017. Based in Alabama — unusual for a top cutting trainer, traditionally Texan — he has built a family dynasty: his father Sam Shepard was an NCHA Hall of Fame rider, his wife Stacy is NCHA Non-Pro Hall of Fame, and son Cade was in 2016 the youngest inductee in NCHA Non-Pro Hall of Fame history at age 15. Austin surpassed 10 million dollars in lifetime earnings in 2024.", "youtube_search": "https://www.youtube.com/results?search_query=Austin+Shepard+cutting+horse+NCHA+Futurity"}, {"id": "paul-hansma", "name": "Paul Hansma", "born": 1958, "died": null, "type": "trainer", "nationality": "Canadian (Fort Worth, Texas)", "active_years": "1980–present", "horses_trained": [], "major_titles": ["NCHA Futurity Open Champion (multiple)", "NCHA Derby Open Champion (multiple)", "NCHA Rider Hall of Fame Inductee", "Lifetime earnings oltre $6 milioni", "1994 NCHA Open Horse of the Year: Hicapoo ($446,712)"], "ncha_lifetime_earnings": 6000000, "anecdotes": "Paul Hansma è il membro più titolato della leggendaria famiglia Hansma — cinque fratelli canadesi (Gerry, Winston, Paul, Dave e Taco) cresciuti nel ranch Bar H5 Cutbank Farms a Granum, Alberta. Paul e il fratello Winston si trasferirono in Texas dove entrambi vinsero NCHA Futurity e Derby. Paul ha allevato Hicapoo, figlia di Doc's Hickory e Out Of Super Poo, NCHA Open Horse of the Year 1994. La famiglia Hansma ha rivoluzionato il training cutting con l'approccio 'holding the line' — rimanere contro la mucca su entrambi i lati dell'arena — una tecnica divenuta standard nel cutting moderno.", "inducted_hall_of_fame": true, "anecdotes_en": "Paul Hansma is the most decorated member of the legendary Hansma family — five Canadian brothers (Gerry, Winston, Paul, Dave and Taco) raised on the Bar H5 Cutbank Farms ranch in Granum, Alberta. Paul and brother Winston relocated to Texas where both won NCHA Futurity and Derby titles. Paul bred Hicapoo, daughter of Doc's Hickory and Out Of Super Poo, NCHA Open Horse of the Year in 1994. The Hansma family revolutionized cutting training with the 'holding the line' approach — staying against the cow on both sides of the arena — a technique that became standard in modern cutting.", "youtube_search": "https://www.youtube.com/results?search_query=Paul+Hansma+cutting+horse+NCHA"}, {"id": "winston-hansma", "name": "Winston Hansma", "born": 1960, "died": null, "type": "trainer", "nationality": "Canadian (Weatherford, Texas)", "active_years": "1982–present", "horses_trained": [], "major_titles": ["NCHA Futurity Open Champion", "NCHA Derby Open Champion", "NCHA Rider Hall of Fame Inductee", "Lifetime earnings oltre $2.3 milioni"], "ncha_lifetime_earnings": 2300000, "anecdotes": "Winston Hansma, fratello di Paul, è con sede a Weatherford, Texas. Come Paul, vinse NCHA Futurity e Derby dopo aver lasciato il Canada. I fratelli Hansma hanno avuto un'influenza formativa su decine di trainer della generazione successiva: Jesse Lennox, Cullen Chartier, Scott Amos e molti altri sono stati formati nel programma Hansma. Il padre Hans Hansma è stato inductee nell'AQHA Hall of Fame nel 2019.", "inducted_hall_of_fame": true, "anecdotes_en": "Winston Hansma, Paul's brother, is based in Weatherford, Texas. Like Paul, he won NCHA Futurity and Derby titles after leaving Canada. The Hansma brothers had a formative influence on dozens of trainers of the next generation: Jesse Lennox, Cullen Chartier, Scott Amos and many others were trained in the Hansma program. Their father Hans Hansma was inducted into the AQHA Hall of Fame in 2019.", "youtube_search": "https://www.youtube.com/results?search_query=Winston+Hansma+cutting+horse+NCHA"}, {"id": "gerry-hansma", "name": "Gerry Hansma", "born": 1956, "died": null, "type": "trainer", "nationality": "Canadian (Granum, Alberta)", "active_years": "1980–present", "horses_trained": [], "major_titles": ["CCHA Futurity e Derby Champion (multiple)", "Canadian Supreme Futurity e Derby Champion", "Calgary Stampede Champion", "NCHA e CCHA Rider Hall of Fame Inductee", "Lifetime earnings oltre $1.3 milioni"], "ncha_lifetime_earnings": 1300000, "anecdotes": "Gerry Hansma, a differenza dei fratelli Paul e Winston, rimase in Canada dove dominò il circuito cutting nordamericano per decenni. Con sede a Granum, Alberta, è stato la porta d'ingresso al cutting per tantissimi giovani trainer canadesi — incluso Jesse Lennox, che a 14 anni puliva i box nel suo ranch. NCHA e CCHA Rider Hall of Fame inductee, ha vinto tutti i principali titoli canadiani per oltre 30 anni.", "inducted_hall_of_fame": true, "anecdotes_en": "Gerry Hansma, unlike brothers Paul and Winston, remained in Canada where he dominated the North American cutting circuit for decades. Based in Granum, Alberta, he has been the gateway to cutting for many young Canadian trainers — including Jesse Lennox, who at age 14 cleaned stalls at his ranch. NCHA and CCHA Rider Hall of Fame inductee, he has won all major Canadian titles for over 30 years.", "youtube_search": "https://www.youtube.com/results?search_query=Gerry+Hansma+cutting+horse+Canada"}, {"id": "jesse-lennox", "name": "Jesse Lennox", "born": 1989, "died": null, "type": "trainer", "nationality": "Canadian (Millsap, Texas)", "active_years": "2010–present", "horses_trained": [], "major_titles": ["NCHA Summer Spectacular Classic/Challenge Open Champion 2015 (Boon San Spoon)", "Lifetime earnings oltre $2.3 milioni", "Trainer at Rocking P Ranch (Bobby Patton)"], "ncha_lifetime_earnings": 2300000, "anecdotes": "Jesse Lennox è uno dei trainer più promettenti della generazione contemporanea. Canadese di origine, ha iniziato a 10 anni pulendo i box da Gerry Hansma, poi a 19 si è trasferito in Texas per lavorare con Casey Green. La svolta arrivò quando Alice Walton — l'erede del colosso Walmart — lo ingaggiò come trainer del suo Rocking W Ranch. Quando Walton uscì dal cutting, Lennox passò al Rocking P Ranch di Bobby Patton — lo stesso ranch dove vive Metallic Cat. La sua storia è l'esempio perfetto di come il talento e la determinazione possano aprire le porte anche a chi non viene da una famiglia del settore.", "inducted_hall_of_fame": false, "anecdotes_en": "Jesse Lennox is one of the most promising trainers of the contemporary generation. Canadian by origin, he started at age 10 cleaning stalls for Gerry Hansma, then at 19 relocated to Texas to work with Casey Green. The breakthrough came when Alice Walton — the Walmart heiress — hired him as trainer for her Rocking W Ranch. When Walton exited cutting, Lennox moved to Bobby Patton's Rocking P Ranch — the same ranch where Metallic Cat lives. His story is the perfect example of how talent and determination can open doors even for those not from a cutting family.", "youtube_search": "https://www.youtube.com/results?search_query=Jesse+Lennox+cutting+horse+NCHA"}, {"id": "wesley-galyean", "name": "Wesley Galyean", "born": 1992, "died": null, "type": "trainer", "nationality": "American (Fort Worth, Texas)", "active_years": "2015–present", "horses_trained": [], "major_titles": ["NCHA Futurity Open Champion 2023 (Lone Woolf)", "NCHA #1 Leading Open Rider 2023 ($5,963,453 lifetime)", "Figlio del leggendario Beau Galyean"], "ncha_lifetime_earnings": 5963453, "anecdotes": "Wesley Galyean è il figlio di Beau Galyean — il trainer che portò Metallic Cat al suo massimo splendore. Cresciuto letteralmente tra i grandi campioni, Wesley ha costruito una carriera propria di altissimo livello, vincendo il NCHA Futurity 2023 su Lone Woolf e chiudendo quella stagione come #1 leading Open Rider. La dynasty Galyean rappresenta una delle continuità più forti nel cutting contemporaneo.", "inducted_hall_of_fame": false, "anecdotes_en": "Wesley Galyean is the son of Beau Galyean — the trainer who brought Metallic Cat to his greatest heights. Raised literally among great champions, Wesley has built his own career at the highest level, winning the 2023 NCHA Futurity on Lone Woolf and closing that season as the #1 Leading Open Rider. The Galyean dynasty represents one of the strongest continuities in contemporary cutting.", "youtube_search": "https://www.youtube.com/results?search_query=Wesley+Galyean+NCHA+Futurity+2023+cutting"}, {"id": "adan-banuelos", "name": "Adan Banuelos", "born": 1987, "died": null, "type": "trainer", "nationality": "American (Weatherford, Texas)", "active_years": "2010–present", "horses_trained": [], "major_titles": ["NCHA Futurity Open Champion 2020 (All Spice)", "Lifetime earnings $6,227,550 (2024)", "The American Performance Horsemen 2023 e 2024"], "ncha_lifetime_earnings": 6227550, "anecdotes": "Adan Banuelos è uno dei trainer più vincenti della scena contemporanea, con oltre $6 milioni di lifetime earnings e il titolo NCHA Futurity 2020 su All Spice. Opera da Weatherford, Texas — epicentro mondiale del cutting. Ha collaborato con Jesse Lennox nella fase di lancio della sua carriera, dimostrando una cultura di mentorship tipica del cutting professionale texano.", "inducted_hall_of_fame": false, "anecdotes_en": "Adan Banuelos is one of the most successful trainers on the contemporary scene, with over 6 million dollars in lifetime earnings and the 2020 NCHA Futurity title on All Spice. He operates from Weatherford, Texas — the world epicenter of cutting. He collaborated with Jesse Lennox in the early phase of his career, demonstrating the culture of mentorship typical of professional Texas cutting.", "youtube_search": "https://www.youtube.com/results?search_query=Adan+Banuelos+NCHA+Futurity+2020+cutting"}, {"id": "buster-welch", "name": "Buster Welch", "born": 1926, "died": 2022, "type": "trainer", "nationality": "American (Texas)", "active_years": "1950–2010", "horses_trained": ["peppy-san", "mr-san-peppy", "peppy-san-badger", "smart-little-lena"], "major_titles": ["NCHA Futurity Open (multiple wins)", "NCHA World Champion Trainer (multiple)"], "anecdotes": "Buster Welch è considerato il padre del cutting horse moderno. Texano puro sangue, trascorse oltre 60 anni a plasmare la disciplina. Trainò alcune delle leggende assolute: Peppy San, Mr San Peppy, Peppy San Badger. La sua filosofia — 'lascia che il cavallo lavori, il rider non deve disturbare' — è ancora oggi il fondamento del cutting. Morì nel 2022 a 95 anni, lasciando un'eredità incomparabile.", "inducted_hall_of_fame": true, "anecdotes_en": "Buster Welch is considered the father of the modern cutting horse. A pure-blood Texan, he spent over 60 years shaping the discipline. He trained some of the absolute legends: Peppy San, Mr San Peppy, Peppy San Badger. His philosophy — 'let the horse work, the rider must not interfere' — is still today the foundation of cutting. He died in 2022 at age 95, leaving an incomparable legacy.", "youtube_search": "https://www.youtube.com/results?search_query=Buster+Welch+cutting+horse+legend"}, {"id": "bill-freeman", "name": "Bill Freeman", "born": 1948, "died": null, "type": "trainer", "nationality": "American (Texas)", "active_years": "1970–2010", "horses_trained": ["smart-little-lena"], "major_titles": ["NCHA Futurity Open 1982 (Smart Little Lena)", "NCHA Triple Crown 1983 (Smart Little Lena)", "NCHA World Champion Trainer"], "anecdotes": "Bill Freeman è il trainer che portò Smart Little Lena alla Triple Crown storica del 1983. La sua capacità di estrarre il massimo da un cavallo già dotato geneticamente lo rese uno dei trainer più rispettati della storia. Il suo metodo enfatizzava la partnership tra cavallo e rider, mai la forza.", "inducted_hall_of_fame": true, "anecdotes_en": "Bill Freeman is the trainer who led Smart Little Lena to the historic Triple Crown of 1983. His ability to extract the maximum from a horse already gifted genetically made him one of the most respected trainers in history. His method emphasized the partnership between horse and rider, never force.", "youtube_search": "https://www.youtube.com/results?search_query=Bill+Freeman+Smart+Little+Lena+cutting"}, {"id": "shorty-freeman", "name": "Shorty Freeman", "born": 1931, "died": 2016, "type": "trainer", "nationality": "American (Texas)", "active_years": "1955–1990", "horses_trained": ["doc-olena"], "major_titles": ["NCHA Futurity Open 1970 (Doc O'Lena)", "NCHA World Champion Trainer (multiple)"], "anecdotes": "Shorty Freeman (Jesse Freeman) fu uno dei pionieri del cutting professionale. La sua vittoria al Futurity 1970 con Doc O'Lena è considerata uno dei momenti fondanti della storia moderna della disciplina. Precursore di Bill Freeman — i due Freeman (non parenti) dominarono il cutting per decenni.", "inducted_hall_of_fame": true, "anecdotes_en": "Shorty Freeman (Jesse Freeman) was one of the pioneers of professional cutting. His victory at the 1970 Futurity with Doc O'Lena is considered one of the founding moments of the modern history of the discipline. Forerunner of Bill Freeman — the two Freemans (not related) dominated cutting for decades.", "youtube_search": "https://www.youtube.com/results?search_query=Shorty+Freeman+Doc+O%27Lena+NCHA+1970"}, {"id": "lindy-burch", "name": "Lindy Burch", "born": 1955, "died": null, "type": "trainer", "nationality": "American", "active_years": "1980–presente", "horses_trained": ["peptoboonsmal"], "major_titles": ["NCHA Futurity Open 1992 (Peptoboonsmal)", "Prima donna a vincere il NCHA Futurity Open"], "anecdotes": "Lindy Burch è una delle figure più importanti nella storia del cutting — prima donna a vincere il NCHA Futurity Open nel 1992 con Peptoboonsmal. La sua vittoria aprì una nuova era dimostrando che il cutting era una disciplina senza distinzioni di genere al massimo livello competitivo.", "inducted_hall_of_fame": true, "anecdotes_en": "Lindy Burch is one of the most important figures in cutting history — the first woman to win the NCHA Futurity Open in 1992 with Peptoboonsmal. Her victory opened a new era by demonstrating that cutting was a discipline without gender distinctions at the highest competitive level.", "youtube_search": "https://www.youtube.com/results?search_query=Lindy+Burch+Peptoboonsmal+NCHA+Futurity+1992"}, {"id": "beau-galyean", "name": "Beau Galyean", "born": 1978, "died": null, "type": "trainer", "nationality": "American (Oklahoma)", "active_years": "2000–presente", "horses_trained": ["metallic-cat"], "major_titles": ["NCHA Futurity Open 2008 (Metallic Cat)", "NCHA Super Stakes Open 2009 (Metallic Cat)", "NCHA Derby Open 2009 (Metallic Cat)", "NCHA World Champion Trainer (multiple)"], "anecdotes": "Beau Galyean è il trainer che portò Metallic Cat al suo massimo splendore. Originario dell'Oklahoma — stato con una tradizione cutting profondissima — Galyean è considerato uno dei migliori trainer della generazione contemporanea. La sua partnership con Metallic Cat rimane uno dei momenti più spettacolari della storia recente del cutting.", "inducted_hall_of_fame": false, "anecdotes_en": "Beau Galyean is the trainer who brought Metallic Cat to his greatest heights. Originally from Oklahoma — a state with a deep cutting tradition — Galyean is considered one of the best trainers of the contemporary generation. His partnership with Metallic Cat remains one of the most spectacular moments in recent cutting history.", "youtube_search": "https://www.youtube.com/results?search_query=Beau+Galyean+Metallic+Cat+NCHA+cutting"}]};
+
+// ─── TRADUZIONI ─────────────────────────────────────────────────────────────
+const T = {
+  en: {
+    searchPlaceholder: 'Search by name, bloodline, trainer...',
+    filterAll: 'All — Stallions & Mares',
+    filterStallions: 'Stallions only',
+    filterMares: 'Mares only',
+    filterAllRoles: 'All roles',
+    filterFounders: 'Founders',
+    filterSires: 'Sires',
+    filterChampions: 'Champions',
+    filterBroodmares: 'Broodmares',
+    filterAllGen: 'All generations',
+    gen0: 'Generation 0 — Founders',
+    gen1: 'Generation I',
+    gen2: 'Generation II',
+    gen3: 'Generation III',
+    gen4: 'Generation IV',
+    gen5: 'Generation V — Modern',
+    resultsFound: (n) => `${n} subjects found`,
+    stallion: 'STALLION',
+    mare: 'MARE',
+    trainer: 'TRAINER',
+    present: 'present',
+    nchaEarnings: 'NCHA Earnings',
+    progenyEarnings: 'Progeny Earnings',
+    lifetimeEarnings: 'Lifetime earnings',
+    pedigree: 'Pedigree',
+    originOwnership: 'Origin & Ownership',
+    showRecords: 'Show Records',
+    navigatePedigree: 'Navigate Pedigree',
+    historyAnecdotes: 'History & Anecdotes',
+    career: 'Career',
+    majorTitles: 'Major Titles',
+    horsesTrained: 'Horses Trained',
+    breeder: 'Breeder',
+    historicOwner: 'Historic Owner',
+    trainerLabel: 'Trainer',
+    bloodline: 'Bloodline',
+    sire: 'Sire',
+    dam: "Dam",
+    damSire: "Dam's Sire",
+    active: 'Active',
+    nationality: 'Nationality',
+    hofLabel: 'Hall of Fame',
+    hofYes: '✓ Inducted',
+    sireNav: '▲ Sire',
+    by: 'by',
+    outOf: 'out of',
+    lineageIntro: 'The genealogy of the modern cutting horse converges on a single ancestor: <strong>Doc Bar</strong>, born in 1956 in Arizona. From him, through five generations of rigorous selection, descend almost all contemporary champions. Click on each subject to open the full profile.',
+    genLabels: {
+      '-1': 'Generation 0 — The Founders (pre-1960)',
+      '0':  'Generation I — The Builders (1955–1975)',
+      '1':  'Generation II — The Champions (1965–1985)',
+      '2':  'Generation III — The Icons (1979–1995)',
+      '3':  'Generation IV — The Bridge (1990–2005)',
+      '4':  'Generation V — The Modern Era (2000–present)'
+    },
+    rankTitles: {
+      horses: 'Top NCHA Lifetime Earnings — Horses',
+      progeny: 'Top Progeny Earnings — Sires & Dams',
+      futurity: 'NCHA Futurity Open Champions',
+      hof: 'NCHA Hall of Fame — Horses',
+      trainers: 'Top Trainers — NCHA Lifetime Earnings'
+    },
+    firstPlace: '🥇 1st Place',
+    trainerLabel2: 'Trainer',
+    genLabel: 'GENERATION',
+    founder: '◆ FOUNDER'
+  },
+  it: {
+    searchPlaceholder: 'Cerca per nome, linea di sangue, trainer...',
+    filterAll: 'Tutti — Stalloni & Fattrici',
+    filterStallions: 'Solo stalloni',
+    filterMares: 'Solo fattrici',
+    filterAllRoles: 'Tutti i ruoli',
+    filterFounders: 'Fondatori',
+    filterSires: 'Sires',
+    filterChampions: 'Campioni',
+    filterBroodmares: 'Fattrici',
+    filterAllGen: 'Tutte le generazioni',
+    gen0: 'Generazione 0 — Fondatori',
+    gen1: 'Generazione I',
+    gen2: 'Generazione II',
+    gen3: 'Generazione III',
+    gen4: 'Generazione IV',
+    gen5: 'Generazione V — Moderni',
+    resultsFound: (n) => `${n} soggetti trovati`,
+    stallion: 'STALLONE',
+    mare: 'FATTRICE',
+    trainer: 'TRAINER',
+    present: 'in attività',
+    nchaEarnings: 'Vincite NCHA',
+    progenyEarnings: 'Vincite Progenie',
+    lifetimeEarnings: 'Vincite lifetime',
+    pedigree: 'Pedigree',
+    originOwnership: 'Origini & Proprietà',
+    showRecords: 'Palmarès',
+    navigatePedigree: 'Naviga il Pedigree',
+    historyAnecdotes: 'Storia & Aneddoti',
+    career: 'Carriera',
+    majorTitles: 'Titoli Principali',
+    horsesTrained: 'Cavalli Allenati',
+    breeder: 'Allevatore',
+    historicOwner: 'Proprietario Storico',
+    trainerLabel: 'Trainer',
+    bloodline: 'Linea di Sangue',
+    sire: 'Padre',
+    dam: 'Madre',
+    damSire: 'Padre della Madre',
+    active: 'Attivo',
+    nationality: 'Nazionalità',
+    hofLabel: 'Hall of Fame',
+    hofYes: '✓ Incluso',
+    sireNav: '▲ Padre',
+    by: 'di',
+    outOf: 'su',
+    lineageIntro: 'La genealogia del cutting horse moderno converge su un unico capostipite: <strong>Doc Bar</strong>, nato nel 1956 in Arizona. Da lui, attraverso cinque generazioni di selezione rigorosa, discendono quasi tutti i campioni contemporanei. Fai clic su ogni soggetto per aprire il profilo completo.',
+    genLabels: {
+      '-1': 'Generazione 0 — I Fondatori (ante 1960)',
+      '0':  'Generazione I — I Costruttori (1955–1975)',
+      '1':  'Generazione II — I Campioni (1965–1985)',
+      '2':  'Generazione III — Le Icone (1979–1995)',
+      '3':  'Generazione IV — Il Ponte (1990–2005)',
+      '4':  'Generazione V — L&#39;Era Moderna (2000–oggi)'
+    },
+    rankTitles: {
+      horses: 'Migliori Vincite NCHA — Cavalli',
+      progeny: 'Migliori Vincite Progenie — Stalloni & Fattrici',
+      futurity: 'Campioni NCHA Futurity Open',
+      hof: 'NCHA Hall of Fame — Cavalli',
+      trainers: 'Top Trainer — Vincite NCHA Lifetime'
+    },
+    firstPlace: '🥇 1° Posto',
+    trainerLabel2: 'Trainer',
+    genLabel: 'GENERAZIONE',
+    founder: '◆ FONDATORE'
+  }
+};
+
+let lang = 'en';
+
+function setLang(l) {
+  lang = l;
+  document.getElementById('btnEN').classList.toggle('active', l === 'en');
+  document.getElementById('btnIT').classList.toggle('active', l === 'it');
+  // Aggiorna tutti gli elementi con data-en/data-it
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + l);
+  });
+  // Aggiorna placeholder ricerca
+  const si = document.getElementById('searchInput');
+  if (si) si.placeholder = T[lang].searchPlaceholder;
+  // Aggiorna select options
+  updateSelects();
+  // Re-render tutto
+  filterHorses();
+  renderRankings();
+  renderLineage();
+  renderTrainers();
+}
+
+function updateSelects() {
+  const t = T[lang];
+  const sel = (id, opts) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const val = el.value;
+    el.innerHTML = opts.map(([v,l]) => `<option value="${v}">${l}</option>`).join('');
+    el.value = val;
+  };
+  sel('filterSex', [['', t.filterAll], ['stallion', t.filterStallions], ['mare', t.filterMares]]);
+  sel('filterRole', [['', t.filterAllRoles], ['founder', t.filterFounders], ['sire', t.filterSires], ['competitor', t.filterChampions], ['broodmare', t.filterBroodmares]]);
+  sel('filterGen', [['', t.filterAllGen], ['-1', t.gen0], ['0', t.gen1], ['1', t.gen2], ['2', t.gen3], ['3', t.gen4], ['4', t.gen5]]);
+}
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+const horses = DB.horses.filter(h => !h.type);
+const trainers = DB.horses.filter(h => h.type === 'trainer');
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+window.onload = () => {
+  updateHeaderStats();
+  setLang('en');
+};
+
+function updateHeaderStats() {
+  document.getElementById('statHorses').textContent = horses.length;
+  document.getElementById('statTrainers').textContent = trainers.length;
+  const totalProgeny = horses.reduce((s, h) => s + (h.progeny_earnings || 0), 0);
+  document.getElementById('statEarnings').textContent = '$' + (totalProgeny/1000000).toFixed(0) + 'M+';
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────────────────────
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// ─── HORSE GRID ──────────────────────────────────────────────────────────────
+function filterHorses() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const sex = document.getElementById('filterSex').value;
+  const role = document.getElementById('filterRole').value;
+  const gen = document.getElementById('filterGen').value;
+
+  const filtered = horses.filter(h => {
+    const matchQ = !q || h.name.toLowerCase().includes(q) ||
+      (h.bloodline||'').toLowerCase().includes(q) ||
+      (h.sire_name||'').toLowerCase().includes(q) ||
+      (h.color||'').toLowerCase().includes(q) ||
+      (h.anecdotes||'').toLowerCase().includes(q);
+    const matchSex = !sex || h.sex === sex;
+    const matchRole = !role || (h.role||[]).includes(role);
+    const matchGen = gen === '' || h.generation === parseInt(gen);
+    return matchQ && matchSex && matchRole && matchGen;
+  });
+
+  renderHorseGrid(filtered);
+}
+
+function renderHorseGrid(list) {
+  const grid = document.getElementById('horseGrid');
+  const info = document.getElementById('resultsInfo');
+  info.textContent = T[lang].resultsFound(list.length);
+
+  const t = T[lang];
+  if (!list.length) {
+    const msg = lang === 'it' ? 'Nessun soggetto trovato' : 'No horses found';
+    grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🐎</div><div class="empty-state-text">${msg}</div></div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map(h => {
+    const genLabel = ['−1','0','I','II','III','IV','V'][h.generation + 1] || '';
+    const earningsStr = h.ncha_earnings ? '$' + h.ncha_earnings.toLocaleString() : '';
+    const progenyStr = h.progeny_earnings ? ' · ' + (lang==='it' ? 'Progenie' : 'Progeny') + ' $' + (h.progeny_earnings/1000000).toFixed(0) + 'M+' : '';
+    const roleMap = {sire:'sire', competitor: lang==='it'?'campione':'competitor', broodmare: lang==='it'?'fattrice':'broodmare', founder: lang==='it'?'fondatore':'founder'};
+    const roles = (h.role||[]).map(r => `<span class="tag ${r}">${roleMap[r]||r}</span>`).join('');
+    const sexLabel = h.sex === 'stallion' ? t.stallion : h.sex === 'mare' ? t.mare : h.sex.toUpperCase();
+    const pedigreeStr = h.sire_name ? `${t.by} <em>${h.sire_name}</em>${h.dam_name ? ` ${t.outOf} <em>${h.dam_name}</em>` : ''}` : '';
+    const presentLabel = t.present;
+
+    return `<div class="horse-card" onclick="openHorse('${h.id}')">
+      <span class="card-gen">Gen ${genLabel}</span>
+      <div class="card-sex ${h.sex}">${sexLabel} · ${(h.color||'').toUpperCase()}</div>
+      <div class="card-name">${h.name}</div>
+      <div class="card-years">${h.born}${h.died ? ' – ' + h.died : ' – ' + presentLabel}</div>
+      <div class="card-pedigree">${pedigreeStr}</div>
+      <div class="card-tags">${roles}</div>
+      ${earningsStr ? `<div class="card-earnings">NCHA ${earningsStr}${progenyStr}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ─── RANKINGS ─────────────────────────────────────────────────────────────────
+function renderRankings() {
+  const byEarnings = [...horses].filter(h => h.ncha_earnings).sort((a,b) => b.ncha_earnings - a.ncha_earnings).slice(0,8);
+  const byProgeny = [...horses].filter(h => h.progeny_earnings).sort((a,b) => b.progeny_earnings - a.progeny_earnings).slice(0,8);
+  const futurityWinners = horses.filter(h => (h.show_records||[]).some(r => r.event === 'NCHA Futurity' && r.placing === 1));
+  const hallOfFame = horses.filter(h => (h.show_records||[]).some(r => r.event === 'NCHA Hall of Fame'));
+
+  const trainersByEarnings = [...trainers].filter(t => t.ncha_lifetime_earnings).sort((a,b) => b.ncha_lifetime_earnings - a.ncha_lifetime_earnings).slice(0,10);
+  const rt = T[lang].rankTitles;
+  document.getElementById('rankingsGrid').innerHTML = `
+    ${rankSection(rt.horses, byEarnings, h => '$' + h.ncha_earnings.toLocaleString())}
+    ${rankSection(rt.progeny, byProgeny, h => '$' + (h.progeny_earnings/1000000).toFixed(0) + 'M+')}
+    ${rankSection(rt.futurity, futurityWinners, h => { const r = h.show_records.find(r => r.event==='NCHA Futurity'&&r.placing===1); return r ? r.year + (r.trainer ? ' · ' + r.trainer : '') : ''; })}
+    ${rankSection(rt.hof, hallOfFame, h => (h.sex === 'stallion' ? T[lang].stallion : T[lang].mare) + ' · ' + h.born)}
+    ${rankSection(rt.trainers, trainersByEarnings, t => '$' + (t.ncha_lifetime_earnings/1000000).toFixed(1) + 'M+', true)}
+  `;
+}
+
+function rankSection(title, list, valueFn, isTrainer=false) {
+  return `<div class="ranking-section">
+    <div class="ranking-header"><div class="ranking-title">${title}</div></div>
+    ${list.map((h,i) => `
+      <div class="ranking-item" onclick="${isTrainer ? 'openTrainer' : 'openHorse'}('${h.id}')">
+        <span class="rank-num">${i+1}</span>
+        <span class="rank-name">${h.name}</span>
+        <span class="rank-value">${valueFn(h)}</span>
+      </div>`).join('')}
+  </div>`;
+}
+
+// ─── LINEAGE ─────────────────────────────────────────────────────────────────
+function renderLineage() {
+  const genNames = T[lang].genLabels;
+
+  const byGen = {};
+  horses.forEach(h => {
+    const k = String(h.generation);
+    if (!byGen[k]) byGen[k] = [];
+    byGen[k].push(h);
+  });
+
+  const order = ['-1','0','1','2','3','4'];
+  document.querySelector('.lineage-intro').innerHTML = T[lang].lineageIntro;
+  document.getElementById('lineageTree').innerHTML = order.map((g,i) => {
+    if (!byGen[g]) return '';
+    const chips = byGen[g].map(h =>
+      `<span class="gen-chip ${h.sex}-chip" onclick="openHorse('${h.id}')">${h.name}</span>`
+    ).join('');
+    const connector = i < order.length-1 ? '<div class="lineage-connector">↓</div>' : '';
+    return `<div class="generation-row">
+      <div class="gen-label">${genNames[g]}</div>
+      <div class="gen-horses">${chips}</div>
+      ${connector}
+    </div>`;
+  }).join('');
+}
+
+// ─── TRAINERS ─────────────────────────────────────────────────────────────────
+function renderTrainers() {
+  // Sort trainers by lifetime earnings desc
+  const tl = T[lang];
+  const sorted = [...trainers].sort((a,b) => (b.ncha_lifetime_earnings||0) - (a.ncha_lifetime_earnings||0));
+  document.getElementById('trainersGrid').innerHTML = sorted.map(t => {
+    const hof = t.inducted_hall_of_fame ? `<span class="tag founder">Hall of Fame</span>` : '';
+    const titlesStr = (t.major_titles||[]).slice(0,2).join(' · ');
+    const earningsStr = t.ncha_lifetime_earnings ? tl.lifetimeEarnings + ': $' + (t.ncha_lifetime_earnings/1000000).toFixed(1) + 'M+' : '';
+    const activeLabel = lang === 'it' ? 'Attivo' : 'Active';
+    const presentLabel = tl.present;
+    return `<div class="horse-card" onclick="openTrainer('${t.id}')">
+      <div class="card-sex trainer">TRAINER · ${t.nationality||''}</div>
+      <div class="card-name">${t.name}</div>
+      <div class="card-years">${t.born}${t.died ? ' – ' + t.died : ' – ' + presentLabel} · ${activeLabel}: ${t.active_years||''}</div>
+      <div class="card-pedigree" style="font-style:normal;font-size:14px;margin-bottom:12px;">${titlesStr}</div>
+      <div class="card-tags">${hof}<span class="tag trainer-tag">trainer</span></div>
+      ${earningsStr ? `<div class="card-earnings">${earningsStr}</div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+// ─── MODAL ───────────────────────────────────────────────────────────────────
+function renderHorseModal(h) {
+  const tl = T[lang];
+  const genLabel = ['−1','0','I','II','III','IV','V'][h.generation + 1] || '';
+
+  const showRecords = (h.show_records||[]).map((r, i) => {
+    const noteText = r.note || '';
+    const placing = r.placing === 1 ? tl.firstPlace : r.placing ? '#'+r.placing : '';
+    const detail = [r.year, r.class, placing, r.trainer ? tl.trainerLabel2 + ': ' + r.trainer : '', noteText].filter(Boolean).join(' · ');
+    return `<div class="show-record-item">
+      <span class="show-record-event">${r.event}</span>
+      <span class="show-record-detail">${detail}</span>
+    </div>`;
+  }).join('');
+
+  const sireHorse = h.sire_id ? horses.find(x => x.id === h.sire_id) : null;
+  const children = horses.filter(x => x.sire_id === h.id);
+  const pedigreeLinks = [
+    sireHorse ? `<span class="pedigree-link" onclick="openHorse('${sireHorse.id}')">${tl.sireNav}: ${sireHorse.name}</span>` : '',
+    ...children.map(c => `<span class="pedigree-link" onclick="openHorse('${c.id}')">▼ ${c.name}</span>`)
+  ].filter(Boolean).join('');
+
+  const trainedBy = trainers.filter(t => (t.horses_trained||[]).includes(h.id));
+  const roleMap = {sire:'sire', competitor: lang==='it'?'campione':'competitor', broodmare: lang==='it'?'fattrice':'broodmare', founder: lang==='it'?'fondatore':'founder'};
+  const anecdoteText = lang === 'en' && h.anecdotes_en ? h.anecdotes_en : (h.anecdotes || '');
+
+  return `
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-header">
+      <div class="modal-eyebrow">
+        <span class="card-sex ${h.sex}" style="font-size:10px;letter-spacing:0.2em;">${h.sex === 'stallion' ? tl.stallion : tl.mare}</span>
+        <span style="color:var(--gray-warm);font-size:10px;letter-spacing:0.15em;">${tl.genLabel} ${genLabel}</span>
+        ${(h.role||[]).includes('founder') ? `<span style="color:#8BAE6E;font-size:10px;letter-spacing:0.15em;">${tl.founder}</span>` : ''}
+      </div>
+      <div class="modal-title">${h.name}</div>
+      <div class="modal-years">${h.born} — ${h.died || tl.present} · ${h.color||''}</div>
+      <div class="card-tags">${(h.role||[]).map(r => `<span class="tag ${r}">${roleMap[r]||r}</span>`).join('')}</div>
+
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">${tl.pedigree}</div>
+        ${row(tl.sire, h.sire_name||'—')}
+        ${row(tl.dam, h.dam_name||'—')}
+        ${row(tl.damSire, h.dam_sire_name||'—')}
+        ${row(tl.bloodline, h.bloodline||'—')}
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">${tl.originOwnership}</div>
+        ${row(tl.breeder, h.breeder||'—')}
+        ${row(tl.historicOwner, h.owner_historic||'—')}
+        ${trainedBy.length ? row(tl.trainerLabel, trainedBy.map(t=>t.name).join(', ')) : ''}
+        ${h.ncha_earnings ? row(tl.nchaEarnings, '$' + h.ncha_earnings.toLocaleString(), 'gold') : ''}
+        ${h.progeny_earnings ? row(tl.progenyEarnings, '$' + (h.progeny_earnings/1000000).toFixed(0) + 'M+', 'gold') : ''}
+        ${h.links?.allbreed ? `<div class="modal-data-row"><span class="modal-data-label">AllBreedPedigree</span><a href="${h.links.allbreed}" target="_blank" class="modal-data-value link-val">→ Open</a></div>` : ''}
+      </div>
+      ${showRecords ? `<div class="modal-show-records"><div class="modal-section-title">${tl.showRecords}</div>${showRecords}</div>` : ''}
+      ${pedigreeLinks ? `<div class="pedigree-nav"><div class="modal-section-title">${tl.navigatePedigree}</div><div class="pedigree-nav-links">${pedigreeLinks}</div></div>` : ''}
+      ${anecdoteText ? `<div class="modal-anecdote"><div class="modal-section-title">${tl.historyAnecdotes}</div><p class="anecdote-text" id="anecdote-${h.id}">${anecdoteText}</p></div>` : ''}
+      ${h.youtube_search ? `<div class="modal-video"><a href="${h.youtube_search}" target="_blank" rel="noopener" class="video-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.52 3.5 12 3.5 12 3.5s-7.52 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.48 20.5 12 20.5 12 20.5s7.52 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.75 15.5V8.5l6.25 3.5-6.25 3.5z"/></svg>${lang === 'it' ? 'Cerca video su YouTube' : 'Search videos on YouTube'}</a></div>` : ''}
+    </div>
+  `;
+}
+
+function openHorse(id) {
+  const h = horses.find(x => x.id === id);
+  if (!h) return;
+  document.getElementById('modalContent').innerHTML = renderHorseModal(h);
+  document.getElementById('modal').classList.add('open');
+}
+
+function openTrainer(id) {
+  const t = trainers.find(x => x.id === id);
+  if (!t) return;
+  const trainedHorses = (t.horses_trained||[]).map(hid => {
+    const h = horses.find(x => x.id === hid);
+    return h ? `<span class="pedigree-link" onclick="openHorse('${h.id}')">${h.name}</span>` : '';
+  }).filter(Boolean).join('');
+
+  const tl = T[lang];
+  const presentLabel = tl.present;
+  document.getElementById('modalContent').innerHTML = `
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div class="modal-header">
+      <div class="modal-eyebrow"><span style="color:var(--green-sage);font-size:10px;letter-spacing:0.2em;">TRAINER</span></div>
+      <div class="modal-title">${t.name}</div>
+      <div class="modal-years">${t.born} — ${t.died || presentLabel} · ${t.nationality||''}</div>
+      <div class="card-tags">${t.inducted_hall_of_fame ? '<span class="tag founder">Hall of Fame</span>' : ''}<span class="tag trainer-tag">trainer</span></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-section">
+        <div class="modal-section-title">${tl.career}</div>
+        ${row(tl.active, t.active_years||'—')}
+        ${row(tl.nationality, t.nationality||'—')}
+        ${t.ncha_lifetime_earnings ? row(tl.lifetimeEarnings, '$' + (t.ncha_lifetime_earnings/1000000).toFixed(1) + 'M+', 'gold') : ''}
+        ${row(tl.hofLabel, t.inducted_hall_of_fame ? tl.hofYes : '—')}
+      </div>
+      <div class="modal-section">
+        <div class="modal-section-title">${tl.majorTitles}</div>
+        ${(t.major_titles||[]).map(tt => `<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:15px;color:var(--dust);">${tt}</div>`).join('')}
+      </div>
+      ${trainedHorses ? `<div class="pedigree-nav"><div class="modal-section-title">${tl.horsesTrained}</div><div class="pedigree-nav-links">${trainedHorses}</div></div>` : ''}
+      ${t.anecdotes ? `<div class="modal-anecdote"><div class="modal-section-title">${tl.historyAnecdotes}</div><p class="anecdote-text">${lang === 'en' && t.anecdotes_en ? t.anecdotes_en : t.anecdotes}</p></div>` : ''}
+      ${t.youtube_search ? `<div class="modal-video"><a href="${t.youtube_search}" target="_blank" rel="noopener" class="video-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.52 3.5 12 3.5 12 3.5s-7.52 0-9.38.55A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14C4.48 20.5 12 20.5 12 20.5s7.52 0 9.38-.55a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.75 15.5V8.5l6.25 3.5-6.25 3.5z"/></svg>${lang === 'it' ? 'Cerca video su YouTube' : 'Search videos on YouTube'}</a></div>` : ''}
+    </div>
+  `;
+  document.getElementById('modal').classList.add('open');
+}
+
+function row(label, value, cls='') {
+  return `<div class="modal-data-row">
+    <span class="modal-data-label">${label}</span>
+    <span class="modal-data-value ${cls}">${value}</span>
+  </div>`;
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modal')) closeModalDirect();
+}
+function closeModalDirect() {
+  document.getElementById('modal').classList.remove('open');
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModalDirect(); });
+</script>
+<div id="bg-audio" style="position:fixed;bottom:-9999px;left:-9999px;width:1px;height:1px;pointer-events:none;">
+  <iframe id="yt-audio" width="1" height="1"
+    src="https://www.youtube.com/embed/G_2xofNvwTA?autoplay=1&loop=1&playlist=G_2xofNvwTA&controls=0&mute=0&volume=20"
+    allow="autoplay"
+    frameborder="0">
+  </iframe>
+</div>
+</body>
+</html>
