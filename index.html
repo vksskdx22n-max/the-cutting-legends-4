@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cutting Horse Heritage — v1.2</title>
+<title>Cutting Horse Heritage — v2.2</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Mono:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -812,20 +812,20 @@ footer {
 
 /* AUDIO PLAYER */
 .audio-player {
-  position: fixed;
-  bottom: 24px;
+  position: absolute;
+  top: 56px;
   right: 24px;
   z-index: 200;
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(13,10,5,0.92);
-  border: 1px solid rgba(200,146,42,0.25);
-  padding: 10px 16px;
-  backdrop-filter: blur(12px);
+  background: rgba(200,146,42,0.06);
+  border: 1px solid rgba(200,146,42,0.2);
+  padding: 4px 10px;
+  border-radius: 2px;
   transition: border-color 0.3s;
 }
-.audio-player:hover { border-color: rgba(200,146,42,0.5); }
+.audio-player:hover { border-color: rgba(200,146,42,0.4); }
 .audio-play-btn {
   background: none; border: none; cursor: pointer;
   color: var(--gold); display: flex; align-items: center;
@@ -870,11 +870,19 @@ footer {
 
 <header>
   <div class="header-bg"></div>
-  <div class="version-badge">v 2.1 — 2026</div>
+  <div class="version-badge">v 2.2 — 2026</div>
   <div class="lang-toggle">
     <button class="lang-btn active" id="btnEN" onclick="setLang('en')">EN</button>
     <span style="color:var(--gray-warm);opacity:0.4;">|</span>
     <button class="lang-btn" id="btnIT" onclick="setLang('it')">IT</button>
+  </div>
+  <div class="audio-player">
+    <button class="audio-play-btn" id="audioBtn" onclick="toggleAudio()" title="Play / Pause">
+      <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M8 5v14l11-7z"/></svg>
+      <svg id="iconPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+    </button>
+    <span class="audio-label">Soundtrack</span>
+    <input class="audio-volume" type="range" id="audioVolume" min="0" max="1" step="0.05" value="0.35" oninput="setVolume(this.value)" title="Volume">
   </div>
   <div class="header-eyebrow">🐴 <span data-en="Cutting Horse Heritage Database" data-it="Database del Patrimonio del Cutting">Cutting Horse Heritage Database</span></div>
   <h1><span data-en="The" data-it="Le">The</span> <em><span data-en="Legends" data-it="Leggende">Legends</span></em><br><span data-en="of Cutting" data-it="del Cutting">of Cutting</span></h1>
@@ -962,7 +970,7 @@ footer {
 </div>
 
 <footer>
-  <span class="footer-text">Cutting Horse Heritage Database — v1.2</span>
+  <span class="footer-text">Cutting Horse Heritage Database — v2.2</span>
   <span class="footer-text" data-en="Data: certified sources only — NCHA / AllBreedPedigree" data-it="Dati: solo fonti certificate — NCHA / AllBreedPedigree">Data: certified sources only — NCHA / AllBreedPedigree</span>
 </footer>
 
@@ -1433,15 +1441,6 @@ document.addEventListener('keydown', e => { if(e.key==='Escape') closeModalDirec
 <audio id="bgAudio" loop preload="auto">
   <source src="background.mp3" type="audio/mpeg">
 </audio>
-
-<div class="audio-player">
-  <button class="audio-play-btn" id="audioBtn" onclick="toggleAudio()" title="Play / Pause">
-    <svg id="iconPlay" viewBox="0 0 24 24" fill="currentColor" style="display:block"><path d="M8 5v14l11-7z"/></svg>
-    <svg id="iconPause" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-  </button>
-  <span class="audio-label">Soundtrack</span>
-  <input class="audio-volume" type="range" id="audioVolume" min="0" max="1" step="0.05" value="0.35" oninput="setVolume(this.value)" title="Volume">
-</div>
 
 <script>
 const audio = document.getElementById('bgAudio');
